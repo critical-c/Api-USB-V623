@@ -399,3 +399,4 @@ C:\Users\jefer\Music\Mio\webapicsharp\obj\Debug\net9.0\refint\webapicsharp.dll
 C:\Users\jefer\Music\Mio\webapicsharp\obj\Debug\net9.0\webapicsharp.pdb
 C:\Users\jefer\Music\Mio\webapicsharp\obj\Debug\net9.0\webapicsharp.genruntimeconfig.cache
 C:\Users\jefer\Music\Mio\webapicsharp\obj\Debug\net9.0\ref\webapicsharp.dll
+C:\Users\jefer\Music\Mio\webapicsharp\obj\Debug\net9.0\webapicsharp.sourcelink.json
