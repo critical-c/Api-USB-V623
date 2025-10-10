@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block titulo_pagina %}
+Inicio - Proyecto Flask con Jinja2
+{% endblock %}
+
+{% block encabezado %}
+Página inicial del proyecto Flask con Jinja2
+{% endblock %}
+
+{% block contenido %}
+<p>Este es el contenido de la página de inicio.  
+Desde aquí se puede comenzar a construir el frontend que se conectará con la API.</p>
+
+<style>
+.imagen-inicio {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.imagen-inicio img {
+    max-width: 150px;  /* Cambia el tamaño si querés */
+    height: auto;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.imagen-inicio img:hover {
+    transform: scale(1.1);
+}
+</style>
+<div class="imagen-inicio">
+<div class="tenor-gif-embed" data-postid="21797829" data-share-method="host" data-aspect-ratio="1.00629" data-width="20%"><a href="https://tenor.com/view/cat-shaking-head-gif-21797829">Cat Shaking GIF</a>from <a href="https://tenor.com/search/cat-gifs">Cat GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script></div>
+{% endblock %}
+

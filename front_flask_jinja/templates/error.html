@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block titulo_pagina %}Error {{ codigo }}{% endblock %}
+
+{% block encabezado %}
+Error {{ codigo }}
+{% endblock %}
+
+{% block contenido %}
+<div class="container text-center mt-5">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-danger text-white">
+            Ha ocurrido un error
+        </div>
+        <div class="card-body">
+            <h2 class="text-danger mb-3">Código {{ codigo }}</h2>
+            <p class="lead">{{ mensaje }}</p>
+            <hr>
+            <p class="text-muted">
+                Si el problema persiste, verifique la URL o contacte al administrador del sistema.
+            </p>
+            <a href="{{ url_for('inicio') }}" class="btn btn-primary mt-3">
+                Volver al inicio
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

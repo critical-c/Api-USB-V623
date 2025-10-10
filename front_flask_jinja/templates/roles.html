@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block titulo_pagina %}Gestión de Roles{% endblock %}
+
+{% block encabezado %}Gestión de Roles{% endblock %}
+
+{% block contenido %}
+<div class="row">
+    <!-- Columna izquierda: Formulario de creación/actualización -->
+    <div class="col-md-6 mx-auto mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                {{ "Crear nuevo rol" if modo == "crear" else "Actualizar rol" }}
+            </div>
+            <div class="card-body">
+                <form method="post"
+                      action="{{ url_for('rutas_roles.crear_rol') if modo == 'crear' else url_for('rutas_roles.actualizar_rol', id=rol.id if rol else 0) }}">
+                    
+                    {% if modo == "actualizar" %}
+                    <div class="mb-3">
+                        <label for="id" class="form-label">ID</label>
+                        <input type="text" id="id" name="id" class="form-control" value="{{ rol.id }}" readonly>
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre del Rol</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control"
+                               placeholder="Ejemplo: Administrador"
+                               value="{{ rol.nombre if rol else '' }}" required>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-{{ 'success' if modo == 'crear' else 'warning' }}">
+                            {{ "Crear rol" if modo == "crear" else "Actualizar rol" }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna derecha: Búsqueda -->
+    <div class="col-md-6 mx-auto mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                Buscar rol
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('rutas_roles.buscar_rol') }}" class="d-flex">
+                    <input type="number" name="id_buscar" class="form-control me-2" placeholder="Buscar por ID" required>
+                    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mensaje si hay notificación -->
+{% if mensaje %}
+    <div class="alert alert-danger text-center" role="alert">
+        {{ mensaje }}
+    </div>
+{% endif %}
+
+<!-- Tabla de roles -->
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-dark text-white">
+        Lista de roles registrados
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in roles %}
+                <tr>
+                    <td>{{ r.id }}</td>
+                    <td>{{ r.nombre }}</td>
+                    <td class="text-center">
+                        <form method="post"
+                              action="{{ url_for('rutas_roles.eliminar_rol', id=r.id) }}"
+                              onsubmit="return confirm('¿Eliminar el rol {{ r.nombre }}?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

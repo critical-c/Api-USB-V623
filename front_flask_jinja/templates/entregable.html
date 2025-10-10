@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block titulo_pagina %}Gestión de Entregables{% endblock %}
+
+{% block encabezado %}Gestión de Entregables{% endblock %}
+
+{% block contenido %}
+
+<div class="row">
+    <!-- ==========================================================
+         COLUMNA IZQUIERDA: Formulario de creación / actualización
+         ========================================================== -->
+    <div class="col-md-6 mx-auto mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                {{ "Crear nuevo entregable" if modo == "crear" else "Actualizar entregable" }}
+            </div>
+            <div class="card-body">
+                <form method="post" 
+                      action="{{ url_for('rutas_entregable.crear_entregable') if modo == 'crear' else url_for('rutas_entregable.actualizar_entregable', id=entregable.id if entregable else '') }}">
+                    
+                    <!-- Campo ID -->
+                    <div class="mb-3">
+                        <label for="id" class="form-label">ID</label>
+                        <input type="number" id="id" name="id" class="form-control"
+                               placeholder="ID del entregable"
+                               value="{{ entregable.id if entregable else '' }}" required readonly>
+                    </div>
+
+                    <!-- Campo Código -->
+                    <div class="mb-3">
+                        <label for="codigo" class="form-label">Código</label>
+                        <input type="text" id="codigo" name="codigo" class="form-control"
+                               placeholder="Código del entregable"
+                               value="{{ entregable.codigo if entregable else '' }}" required>
+                    </div>
+
+                    <!-- Campo Título -->
+                    <div class="mb-3">
+                        <label for="titulo" class="form-label">Título</label>
+                        <input type="text" id="titulo" name="titulo" class="form-control"
+                               placeholder="Título del entregable"
+                               value="{{ entregable.titulo if entregable else '' }}" required>
+                    </div>
+
+                    <!-- Campo Descripción -->
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <input type="text" id="descripcion" name="descripcion" class="form-control"
+                               placeholder="Descripción del entregable"
+                               value="{{ entregable.descripcion if entregable else '' }}" required>
+                    </div>
+
+                    <!-- Campo Fecha Inicio -->
+                    <div class="mb-3">
+                        <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
+                        <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control"
+                               value="{{ entregable.fecha_inicio if entregable else '' }}" required>
+                    </div>
+
+                    <!-- Campo Fecha Fin Prevista -->
+                    <div class="mb-3">
+                        <label for="fecha_fin_prevista" class="form-label">Fecha Fin Prevista</label>
+                        <input type="date" id="fecha_fin_prevista" name="fecha_fin_prevista" class="form-control"
+                               value="{{ entregable.fecha_fin_prevista if entregable else '' }}" required>
+                    </div>
+
+                    <!-- Campo Fecha Modificación -->
+                    <div class="mb-3">
+                        <label for="fecha_modificacion" class="form-label">Fecha de Modificación</label>
+                        <input type="date" id="fecha_modificacion" name="fecha_modificacion" class="form-control"
+                               value="{{ entregable.fecha_modificacion if entregable else '' }}">
+                    </div>
+
+                    <!-- Campo Fecha Finalización -->
+                    <div class="mb-3">
+                        <label for="fecha_finalizacion" class="form-label">Fecha de Finalización</label>
+                        <input type="date" id="fecha_finalizacion" name="fecha_finalizacion" class="form-control"
+                               value="{{ entregable.fecha_finalizacion if entregable else '' }}">
+                    </div>
+
+                    <!-- Botón dinámico -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-{{ 'success' if modo == 'crear' else 'warning' }}">
+                            {{ "Crear entregable" if modo == "crear" else "Actualizar entregable" }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+         COLUMNA DERECHA: Formulario de búsqueda
+         ========================================================== -->
+    <div class="col-md-6 mx-auto mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                Buscar entregable
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('rutas_entregable.buscar_entregable') }}" class="d-flex">
+                    <input type="number" name="id_buscar" class="form-control me-2" placeholder="Buscar por ID" required>
+                    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================================
+     MENSAJE DE ERROR O NOTIFICACIÓN
+     ========================================================== -->
+{% if mensaje %}
+    <div class="alert alert-danger text-center" role="alert">
+        {{ mensaje }}
+    </div>
+{% endif %}
+
+<!-- ==========================================================
+     TABLA DE ENTREGABLES REGISTRADOS
+     ========================================================== -->
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-dark text-white">
+        Lista de entregables registrados
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Código</th>
+                    <th scope="col">Título</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Fecha Inicio</th>
+                    <th scope="col">Fecha Fin Prevista</th>
+                    <th scope="col">Fecha Modificación</th>
+                    <th scope="col">Fecha Finalización</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in entregables %}
+                    <tr>
+                        <td>{{ e.id }}</td>
+                        <td>{{ e.codigo }}</td>
+                        <td>{{ e.titulo }}</td>
+                        <td>{{ e.descripcion }}</td>
+                        <td>{{ e.fecha_inicio }}</td>
+                        <td>{{ e.fecha_fin_prevista }}</td>
+                        <td>{{ e.fecha_modificacion }}</td>
+                        <td>{{ e.fecha_finalizacion }}</td>
+                        <td class="text-center">
+                            <form method="post" 
+                                  action="{{ url_for('rutas_entregable.eliminar_entregable', id=e.id) }}"
+                                  onsubmit="return confirm('¿Está seguro de eliminar el entregable {{ e.id }}?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

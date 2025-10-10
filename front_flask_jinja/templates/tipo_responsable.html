@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block titulo_pagina %}Gestión de Tipo de Responsable{% endblock %}
+
+{% block encabezado %}Gestión de Tipo de Responsable{% endblock %}
+
+{% block contenido %}
+
+<div class="row">
+    <!-- ==========================================================
+         COLUMNA IZQUIERDA: Formulario de creación / actualización
+         ========================================================== -->
+    <div class="col-md-6 mx-auto mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                {{ "Crear nuevo tipo de responsable" if modo == "crear" else "Actualizar tipo de responsable" }}
+            </div>
+            <div class="card-body">
+                <form method="post" 
+                      action="{{ url_for('rutas_tipo_responsable.crear_tipo_responsable') if modo == 'crear' else url_for('rutas_tipo_responsable.actualizar_tipo_responsable', id=tipo.id if tipo else '') }}">
+                    
+                    <!-- Campo ID -->
+                    <div class="mb-3">
+                        <label for="id" class="form-label">ID</label>
+                        <input type="number" id="id" name="id" class="form-control"
+                               placeholder="ID del tipo de responsable"
+                               value="{{ tipo.id if tipo else '' }}" readonly>
+                    </div>
+
+                    <!-- Campo Título -->
+                    <div class="mb-3">
+                        <label for="titulo" class="form-label">Título</label>
+                        <input type="text" id="titulo" name="titulo" class="form-control"
+                               placeholder="Título del tipo de responsable"
+                               value="{{ tipo.titulo if tipo else '' }}" required>
+                    </div>
+
+                    <!-- Campo Descripción -->
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" class="form-control" rows="3"
+                                  placeholder="Descripción del tipo de responsable">{{ tipo.descripcion if tipo else '' }}</textarea>
+                    </div>
+
+                    <!-- Botón dinámico -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-{{ 'success' if modo == 'crear' else 'warning' }}">
+                            {{ "Crear tipo de responsable" if modo == "crear" else "Actualizar tipo de responsable" }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+         COLUMNA DERECHA: Formulario de búsqueda
+         ========================================================== -->
+    <div class="col-md-6 mx-auto mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                Buscar tipo de responsable
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('rutas_tipo_responsable.buscar_tipo_responsable') }}" class="d-flex">
+                    <input type="number" name="id_buscar" class="form-control me-2" placeholder="Buscar por ID" required>
+                    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================================
+     MENSAJE DE ERROR O NOTIFICACIÓN
+     ========================================================== -->
+{% if mensaje %}
+    <div class="alert alert-danger text-center" role="alert">
+        {{ mensaje }}
+    </div>
+{% endif %}
+
+<!-- ==========================================================
+     TABLA DE TIPOS DE RESPONSABLE REGISTRADOS
+     ========================================================== -->
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-dark text-white">
+        Lista de tipos de responsable registrados
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Título</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tipos %}
+                    <tr>
+                        <td>{{ t.id }}</td>
+                        <td>{{ t.titulo }}</td>
+                        <td>{{ t.descripcion }}</td>
+                        <td class="text-center">
+                            <form method="post" 
+                                  action="{{ url_for('rutas_tipo_responsable.eliminar_tipo_responsable', id=t.id) }}"
+                                  onsubmit="return confirm('¿Está seguro de eliminar el tipo de responsable {{ t.id }}?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block titulo_pagina %}Gestión de Tipo de Proyecto{% endblock %}
+
+{% block encabezado %}Gestión de Tipo de Proyecto{% endblock %}
+
+{% block contenido %}
+
+<div class="row">
+    <!-- ==========================================================
+         COLUMNA IZQUIERDA: Formulario de creación / actualización
+         ========================================================== -->
+    <div class="col-md-6 mx-auto mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                {{ "Crear nuevo tipo de proyecto" if modo == "crear" else "Actualizar tipo de proyecto" }}
+            </div>
+            <div class="card-body">
+                <form method="post" 
+                      action="{{ url_for('rutas_tipo_proyecto.crear_tipo_proyecto') if modo == 'crear' else url_for('rutas_tipo_proyecto.actualizar_tipo_proyecto', id=tipo.id if tipo else '') }}">
+                    
+                    <!-- Campo ID -->
+                    <div class="mb-3">
+                        <label for="id" class="form-label">ID</label>
+                        <input type="number" id="id" name="id" class="form-control"
+                               placeholder="ID del tipo de proyecto"
+                               value="{{ tipo.id if tipo else '' }}" readonly>
+                    </div>
+
+                    <!-- Campo Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control"
+                               placeholder="Nombre del tipo de proyecto"
+                               value="{{ tipo.nombre if tipo else '' }}" required>
+                    </div>
+
+                    <!-- Campo Descripción -->
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" class="form-control" rows="3"
+                                  placeholder="Descripción del tipo de proyecto">{{ tipo.descripcion if tipo else '' }}</textarea>
+                    </div>
+
+                    <!-- Botón dinámico -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-{{ 'success' if modo == 'crear' else 'warning' }}">
+                            {{ "Crear tipo de proyecto" if modo == "crear" else "Actualizar tipo de proyecto" }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+         COLUMNA DERECHA: Formulario de búsqueda
+         ========================================================== -->
+    <div class="col-md-6 mx-auto mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                Buscar tipo de proyecto
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('rutas_tipo_proyecto.buscar_tipo_proyecto') }}" class="d-flex">
+                    <input type="number" name="id_buscar" class="form-control me-2" placeholder="Buscar por ID" required>
+                    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================================
+     MENSAJE DE ERROR O NOTIFICACIÓN
+     ========================================================== -->
+{% if mensaje %}
+    <div class="alert alert-danger text-center" role="alert">
+        {{ mensaje }}
+    </div>
+{% endif %}
+
+<!-- ==========================================================
+     TABLA DE TIPOS DE PROYECTO REGISTRADOS
+     ========================================================== -->
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-dark text-white">
+        Lista de tipos de proyecto registrados
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tipos %}
+                    <tr>
+                        <td>{{ t.id }}</td>
+                        <td>{{ t.nombre }}</td>
+                        <td>{{ t.descripcion }}</td>
+                        <td class="text-center">
+                            <form method="post" 
+                                  action="{{ url_for('rutas_tipo_proyecto.eliminar_tipo_proyecto', id=t.id) }}"
+                                  onsubmit="return confirm('¿Está seguro de eliminar el tipo de proyecto {{ t.id }}?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

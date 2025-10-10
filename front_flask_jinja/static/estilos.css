@@ -1,0 +1,118 @@
+/* ===============================================================
+   Estilos generales
+==================================================================*/
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* ===============================================================
+   Encabezado y barra de navegación
+==================================================================*/
+.navbar {
+    border-bottom: 2px solid #dee2e6;
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+/* Cambia el color al pasar el ratón sobre los enlaces del menú */
+.nav-link {
+    color: #495057 !important;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #0d6efd !important; /* Azul Bootstrap */
+}
+
+/* ===============================================================
+   Submenú: Gestión de Datos
+==================================================================*/
+/* Fondo claro y borde suave del menú desplegable */
+.dropdown-menu {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+/* Color del texto y fondo al pasar el ratón */
+.dropdown-item {
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #e9f2ff;  /* Azul claro */
+    color: #0d6efd;             /* Azul Bootstrap */
+}
+
+/* Línea divisoria más suave */
+.dropdown-divider {
+    border-top: 1px solid #dee2e6;
+}
+
+/* ===============================================================
+   Encabezados y contenido principal
+==================================================================*/
+h1 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    border-bottom: 2px solid #adb5bd;
+    padding-bottom: 5px;
+}
+
+/* ===============================================================
+   Tarjetas y tablas
+==================================================================*/
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    background-color: #e9ecef;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+/* ===============================================================
+   Botones y alertas
+==================================================================*/
+.btn {
+    border-radius: 6px;
+}
+
+.alert {
+    border-radius: 6px;
+}
+
+/* ===============================================================
+   Pie de página
+==================================================================*/
+footer {
+    background-color: #ffffff;
+    color: #6c757d;
+    text-align: center;
+    padding: 10px 0;
+    border-top: 1px solid #dee2e6;
+    margin-top: auto;
+}

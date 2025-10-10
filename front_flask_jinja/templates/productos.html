@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block titulo_pagina %}Gestión de Productos{% endblock %}
+
+{% block encabezado %}Gestión de Productos{% endblock %}
+
+{% block contenido %}
+
+<div class="row">
+
+    <!-- =======================================================
+         FORMULARIO DE CREACIÓN / ACTUALIZACIÓN
+         ======================================================= -->
+    <div class="col-md-6 mx-auto mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                {{ "Crear nuevo producto" if modo == "crear" else "Actualizar producto" }}
+            </div>
+
+            <div class="card-body">
+                <!--
+                    Si el modo es "crear", el formulario apunta a /productos (POST)
+                    Si el modo es "actualizar", apunta a /productos/actualizar (POST también)
+                    En ambos casos Flask usa POST y dentro hace PUT hacia la API real.
+                -->
+                <form method="post" 
+                      action="{{ url_for('rutas_productos.crear_producto') if modo == 'crear' else url_for('rutas_productos.actualizar_producto') }}">
+                    
+                    <!-- Campo: Código -->
+                    <div class="mb-3">
+                        <label for="codigo" class="form-label">Código</label>
+                        <input type="text" id="codigo" name="codigo" class="form-control"
+                               placeholder="Código del producto"
+                               value="{{ producto.codigo if producto else '' }}" required {{ 'readonly' if modo == 'actualizar' }}>
+                    </div>
+
+                    <!-- Campo: Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control"
+                               placeholder="Nombre del producto"
+                               value="{{ producto.nombre if producto else '' }}" required>
+                    </div>
+
+                    <!-- Campo: Valor Unitario -->
+                    <div class="mb-3">
+                        <label for="valorunitario" class="form-label">Valor Unitario</label>
+                        <input type="number" id="valorunitario" name="valorunitario" class="form-control"
+                               placeholder="Ejemplo: 1500"
+                               value="{{ producto.valorunitario if producto else '' }}" required>
+                    </div>
+
+                    <!-- Campo: Stock -->
+                    <div class="mb-3">
+                        <label for="stock" class="form-label">Stock</label>
+                        <input type="number" id="stock" name="stock" class="form-control"
+                               placeholder="Cantidad disponible"
+                               value="{{ producto.stock if producto else '' }}" required>
+                    </div>
+
+                    <!-- Botón Crear / Actualizar -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-{{ 'success' if modo == 'crear' else 'warning' }}">
+                            {{ "Crear producto" if modo == "crear" else "Actualizar producto" }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- =======================================================
+         FORMULARIO DE BÚSQUEDA
+         ======================================================= -->
+    <div class="col-md-6 mx-auto mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                Buscar producto
+            </div>
+            <div class="card-body">
+                <!--
+                    El formulario usa GET, no POST.
+                    Así Flask recibe request.args.get("codigo")
+                    y busca el producto por código.
+                -->
+                <form method="get" action="{{ url_for('rutas_productos.buscar_producto') }}" class="d-flex">
+                    <input type="text" name="codigo" class="form-control me-2" placeholder="Buscar por código" required>
+                    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- =======================================================
+     MENSAJE DE RESULTADO O ERROR
+     ======================================================= -->
+{% if mensaje %}
+    <div class="alert alert-danger text-center" role="alert">
+        {{ mensaje }}
+    </div>
+{% endif %}
+
+<!-- =======================================================
+     TABLA DE PRODUCTOS
+     ======================================================= -->
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-dark text-white">
+        Lista de productos registrados
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Código</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Valor Unitario</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in productos %}
+                    <tr>
+                        <td>{{ p.codigo }}</td>
+                        <td>{{ p.nombre }}</td>
+                        <td>${{ "{:,}".format(p.valorunitario) }}</td>
+                        <td>{{ p.stock }}</td>
+                        <td class="text-center">
+
+                            <!--
+                                Botón de eliminación:
+                                Se usa POST porque el HTML no admite DELETE.
+                                Flask lo traduce internamente a DELETE hacia la API.
+                            -->
+                            <form method="post" 
+                                  action="{{ url_for('rutas_productos.eliminar_producto') }}"
+                                  onsubmit="return confirm('¿Está seguro de eliminar el producto {{ p.nombre }}?');">
+                                <input type="hidden" name="codigo" value="{{ p.codigo }}">
+                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                            </form>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
