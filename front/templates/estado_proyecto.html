@@ -13,22 +13,9 @@
           action="{{ url_for('rutas_estado_proyecto.crear_estado_proyecto') if modo == 'crear' else url_for('rutas_estado_proyecto.actualizar_estado_proyecto') }}">
       
 
-        
-      <div class="campo">
-        <label>ID Estado</label>
-        <select name="id_estado" required>
-          <option value="">Seleccione un estado</option>
-          {% for e in estado %}
-            <option value="{{ e.id }}"
-              {% if estado_proyecto and estado_proyecto.id_estado == e.id %}selected{% endif %}>
-              {{ e.titulo if e.titulo else "Proyecto " ~ e.id }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
 
       <div class="campo">
-        <label>ID Estado</label>
+        <label>ID Proyecto</label>
         <select name="id_proyecto" required>
           <option value="">Seleccione un proyecto</option>
           {% for p in proyectos %}
@@ -39,6 +26,20 @@
           {% endfor %}
         </select>
       </div>
+        
+      <div class="campo">
+        <label>ID Estado</label>
+        <select name="id_estado" required>
+          <option value="">Seleccione un estado</option>
+          {% for e in estado %}
+            <option value="{{ e.id }}"
+              {% if estado_proyecto and estado_proyecto.id_estado == e.id %}selected{% endif %}>
+              {{ e.titulo if e.titulo else "Estado " ~ e.id }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
 
       <button type="submit" class="btn-principal">
         {{ "Crear" if modo == "crear" else "Actualizar" }}

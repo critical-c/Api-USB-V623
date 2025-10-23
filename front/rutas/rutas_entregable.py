@@ -1,6 +1,7 @@
 # Importar módulos necesarios de Flask y la librería requests para conectarse a la API externa
 from flask import Blueprint, render_template, request, redirect, url_for
 import requests
+from datetime import datetime
 
 # Crear el Blueprint de entregables
 rutas_entregable = Blueprint("rutas_entregable", __name__)
@@ -8,6 +9,20 @@ rutas_entregable = Blueprint("rutas_entregable", __name__)
 # URL base de la API en C# que gestiona los entregables
 API_URL = "http://localhost:5031/api/entregable"
 
+
+def formatear_fecha(fecha_str):
+    """
+    Convierte una fecha a formato YYYY-MM-DD compatible con <input type="date">.
+    Acepta fechas como '2025-10-08', '08-10-2025' o '2025-10-08T00:00:00'.
+    """
+    if not fecha_str:
+        return ""
+    for fmt in ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%d-%m-%Y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(fecha_str, fmt).strftime("%Y-%m-%d")
+        except ValueError:
+            pass
+    return ""
 # ------------------- LISTAR entregable -------------------
 @rutas_entregable.route("/entregable")
 def entregable():
@@ -25,6 +40,7 @@ def entregable():
         modo="crear"
     )
 
+
 # ------------------- BUSCAR entregable -------------------
 @rutas_entregable.route("/entregable/buscar", methods=["POST"])
 def buscar_entregable():
@@ -37,6 +53,10 @@ def buscar_entregable():
                 datos = respuesta.json().get("datos", [])
                 if datos:
                     entregable = datos[0]
+                    entregable["fecha_inicio"] = formatear_fecha(entregable.get("fecha_inicio"))
+                    entregable["fecha_fin_prevista"] = formatear_fecha(entregable.get("fecha_fin_prevista"))
+                    entregable["fecha_modificacion"] = formatear_fecha(entregable.get("fecha_modificacion"))
+                    entregable["fecha_finalizacion"] = formatear_fecha(entregable.get("fecha_finalizacion"))
                     entregables = requests.get(API_URL).json().get("datos", [])
                     return render_template(
                         "entregables.html",
@@ -86,7 +106,7 @@ def actualizar_entregable():
         "descripcion": request.form.get("descripcion"),
         "fecha_inicio": request.form.get("fecha_inicio"),
         "fecha_fin_prevista": request.form.get("fecha_fin_prevista"),
-        "fecha_modificacion": request.form.get("fecha_modificacion") or None,
+        "fecha_modificacion": datetime.now().strftime("%Y-%m-%d"),
         "fecha_finalizacion": request.form.get("fecha_finalizacion") or None
     }
 
