@@ -18,11 +18,20 @@
                value="{{ archivo.id if archivo else '' }}" required readonly>
       </div>
 
+
       <div class="campo">
         <label>ID Usuario</label>
-        <input type="text" name="id_usuario" placeholder="ID Usuario"
-               value="{{ archivo.id_usuario if archivo else '' }}" required>
+        <select name="id_usuario" required>
+          <option value="">Seleccione un usuario</option>
+          {% for u in usuario %}
+            <option value="{{ u.id }}" 
+              {% if archivo and archivo.id_usuario == u.id %}selected{% endif %}>
+              {{ u.nombre if u.nombre else "Usuario " ~ u.id }}
+            </option>
+          {% endfor %}
+        </select>
       </div>
+
 
       <div class="campo">
         <label>Ruta</label>
