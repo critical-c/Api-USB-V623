@@ -1,0 +1,172 @@
+/* ------------------------------
+   Diseño principal de Usuarios
+--------------------------------*/
+.usuarios-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+/* === FORMULARIO (izquierda) === */
+.formulario {
+  flex: 1;
+  max-width: 350px;
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.formulario h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #182848;
+}
+
+.campo {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.campo label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #333;
+}
+
+.campo input {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.btn-principal, .btn-secundario {
+  background: linear-gradient(135deg, #4b6cb7, #182848);
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-principal:hover, .btn-secundario:hover {
+  opacity: 0.9;
+}
+
+/* === FORMULARIO DE BÚSQUEDA === */
+.buscar-form {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mensaje {
+  margin-top: 1rem;
+  text-align: center;
+  color: #333;
+}
+
+/* === TABLA (derecha) === */
+.tabla {
+  flex: 2;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.tabla h2 {
+  margin-bottom: 1rem;
+}
+
+.tabla table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla th, .tabla td {
+  border-bottom: 1px solid #ddd;
+  padding: 0.6rem;
+  text-align: center;
+}
+
+.btn-eliminar {
+  background: linear-gradient(135deg, #ff5858, #f857a6);
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-eliminar:hover {
+  opacity: 0.8;
+}
+
+/* === Campos de fecha elegantes === */
+input[type="date"] {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fdfdfd;
+  color: #333;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Al pasar el mouse */
+input[type="date"]:hover {
+  border-color: #4b6cb7;
+  background-color: #f4f7ff;
+}
+
+/* Al hacer foco (cuando se selecciona el campo) */
+input[type="date"]:focus {
+  outline: none;
+  border-color: #182848;
+  box-shadow: 0 0 5px rgba(24, 40, 72, 0.3);
+}
+
+/* Etiquetas que acompañan los campos */
+label {
+  font-weight: 600;
+  color: #182848;
+  margin-top: 0.8rem;
+  display: block;
+}
+
+/* Estilo general para inputs */
+input {
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Ajuste visual para los calendarios nativos */
+::-webkit-calendar-picker-indicator {
+  background-color: #4b6cb7;
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+  filter: invert(1);
+}
+
+
+/* ===== Option (Lista desplegable) =====*/
+.campo select, textarea{
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+
+<div class="usuarios-wrapper">
+
+  <!-- === FORMULARIO IZQUIERDA === -->
+  <div class="formulario">
+    <h2>{{ "Crear Archivo_Entregable" if modo == "crear" else "Actualizar Archivo_Entregable" }}</h2>
+
+    <form method="post" 
+          action="{{ url_for('rutas_archivo_entregable.crear_archivo_entregable') if modo == 'crear' else url_for('rutas_archivo_entregable.actualizar_archivo_entregable') }}">
+      
+      <div class="campo">
+        <label>ID Archivo</label>
+        <input type="text" name="id_archivo" placeholder="ID Archivo"
+               value="{{ archivo_entregable.id_archivo if archivo_entregable else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>ID Entregable</label>
+        <input type="text" name="id_entregable" placeholder="ID Entregable"
+               value="{{ archivo_entregable.id_entregable if archivo_entregable else '' }}" required>
+      </div>
+
+      <button type="submit" class="btn-principal">
+        {{ "Crear" if modo == "crear" else "Actualizar" }}
+      </button>
+    </form>
+
+    <!-- FORMULARIO DE BÚSQUEDA -->
+    <form method="post" action="{{ url_for('rutas_archivo_entregable.buscar_archivo_entregable') }}" class="buscar-form">
+      <input type="text" name="codigo_buscar" placeholder="Buscar por ID Archivo" required>
+      <button type="submit" class="btn-secundario">Buscar</button>
+    </form>
+
+    {% if mensaje %}
+      <p class="mensaje">{{ mensaje }}</p>
+    {% endif %}
+  </div>
+
+  <!-- === TABLA DERECHA === -->
+  <div class="tabla">
+    <h2>Lista de Archivos_Entregables</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID Archivo</th>
+          <th>ID Entregable</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ae in archivos_entregables %}
+        <tr>
+          <td>{{ ae.id_archivo }}</td>
+          <td>{{ ae.id_entregable }}</td>
+          <td>
+            <form method="post" action="{{ url_for('rutas_archivo_entregable.eliminar_archivo_entregable', codigo=ae.id_archivo) }}">
+              <button type="submit" class="btn-eliminar">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

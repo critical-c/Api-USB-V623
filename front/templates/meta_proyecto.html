@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+
+<div class="usuarios-wrapper">
+
+  <!-- === FORMULARIO IZQUIERDA === -->
+  <div class="formulario">
+    <h2>{{ "Crear Meta_Proyecto" if modo == "crear" else "Actualizar Meta_Proyecto" }}</h2>
+
+    <form method="post" 
+          action="{{ url_for('rutas_meta_proyecto.crear_meta_proyecto') if modo == 'crear' else url_for('rutas_meta_proyecto.actualizar_meta_proyecto') }}">
+      
+
+
+        <div class="campo">
+        <label>ID Meta Estratégica</label>
+        <select name="id_meta" required>
+          <option value="">Seleccione una meta estratégica</option>
+          {% for m in metas_estrategica %}
+            <option value="{{ m.id }}"
+              {% if meta_proyecto and meta_proyecto.id_meta == m.id %}selected{% endif %}>
+              {{ m.titulo if m.titulo else "Meta estratégica " ~ m.id }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="campo">
+        <label>ID Proyecto</label>
+        <select name="id_proyecto" required>
+          <option value="">Seleccione un proyecto</option>
+          {% for p in proyectos %}
+            <option value="{{ p.id }}"
+              {% if meta_proyecto and meta_proyecto.id_proyecto == p.id %}selected{% endif %}>
+              {{ p.titulo if p.titulo else "Proyecto " ~ p.id }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="campo">
+        <label>Fecha de Asociación</label>
+        <input type="date" name="fecha_asociacion"
+               value="{{ meta_proyecto.fecha_asociacion if meta_proyecto else '' }}" required>
+      </div>
+
+      <button type="submit" class="btn-principal">
+        {{ "Crear" if modo == "crear" else "Actualizar" }}
+      </button>
+    </form>
+
+    <!-- FORMULARIO DE BÚSQUEDA -->
+    <form method="post" action="{{ url_for('rutas_meta_proyecto.buscar_meta_proyecto') }}" class="buscar-form">
+      <input type="text" name="codigo_buscar" placeholder="Buscar por ID Meta" required>
+      <button type="submit" class="btn-secundario">Buscar</button>
+    </form>
+
+    {% if mensaje %}
+      <p class="mensaje">{{ mensaje }}</p>
+    {% endif %}
+  </div>
+
+  <!-- === TABLA DERECHA === -->
+  <div class="tabla">
+    <h2>Lista de Metas-Proyecto</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID Meta Estratégica</th>
+          <th>ID Proyecto</th>
+          <th>Fecha de Asociación</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mp in metas_proyecto %}
+        <tr>
+          <td>{{ mp.id_meta }}</td>
+          <td>{{ mp.id_proyecto }}</td>
+          <td>{{ mp.fecha_asociacion }}</td>
+          <td>
+            <form method="post" action="{{ url_for('rutas_meta_proyecto.eliminar_meta_proyecto', codigo=mp.id_meta) }}">
+              <button type="submit" class="btn-eliminar">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

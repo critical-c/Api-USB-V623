@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+
+<div class="usuarios-wrapper">
+
+  <!-- === FORMULARIO IZQUIERDA === -->
+  <div class="formulario">
+    <h2>{{ "Crear Archivo" if modo == "crear" else "Actualizar Archivo" }}</h2>
+
+    <form method="post" 
+          action="{{ url_for('rutas_archivo.crear_archivo') if modo == 'crear' else url_for('rutas_archivo.actualizar_archivo') }}">
+      
+      <div class="campo">
+        <label>ID</label>
+        <input type="text" name="id" placeholder="ID"
+               value="{{ archivo.id if archivo else '' }}" required readonly>
+      </div>
+
+      <div class="campo">
+        <label>ID Usuario</label>
+        <input type="text" name="id_usuario" placeholder="ID Usuario"
+               value="{{ archivo.id_usuario if archivo else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Ruta</label>
+        <input type="text" name="ruta" placeholder="Ruta del archivo"
+               value="{{ archivo.ruta if archivo else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Nombre</label>
+        <input type="text" name="nombre" placeholder="Nombre del archivo"
+               value="{{ archivo.nombre if archivo else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Tipo</label>
+        <input type="text" name="tipo" placeholder="Tipo de archivo"
+               value="{{ archivo.tipo if archivo else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Fecha</label>
+        <input type="date" name="fecha"
+               value="{{ archivo.fecha if archivo else '' }}" required>
+      </div>
+
+      <button type="submit" class="btn-principal">
+        {{ "Crear" if modo == "crear" else "Actualizar" }}
+      </button>
+    </form>
+
+    <!-- FORMULARIO DE BÚSQUEDA -->
+    <form method="post" action="{{ url_for('rutas_archivo.buscar_archivo') }}" class="buscar-form">
+      <input type="text" name="codigo_buscar" placeholder="Buscar por ID" required>
+      <button type="submit" class="btn-secundario">Buscar</button>
+    </form>
+
+    {% if mensaje %}
+      <p class="mensaje">{{ mensaje }}</p>
+    {% endif %}
+  </div>
+
+  <!-- === TABLA DERECHA === -->
+  <div class="tabla">
+    <h2>Lista de Archivos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>ID Usuario</th>
+          <th>Ruta</th>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Fecha</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in archivos %}
+        <tr>
+          <td>{{ a.id }}</td>
+          <td>{{ a.id_usuario }}</td>
+          <td>{{ a.ruta }}</td>
+          <td>{{ a.nombre }}</td>
+          <td>{{ a.tipo }}</td>
+          <td>{{ a.fecha }}</td>
+          <td>
+            <form method="post" action="{{ url_for('rutas_archivo.eliminar_archivo', codigo=a.id) }}">
+              <button type="submit" class="btn-eliminar">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

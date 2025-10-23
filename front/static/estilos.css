@@ -1,0 +1,304 @@
+/* ------------------------------
+   Estilos generales del sitio
+--------------------------------*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Inter', sans-serif;
+    background-color: #fafafa;
+    color: #222;
+    line-height: 1.6;
+}
+
+/* ------------------------------
+   Encabezado y navegación
+--------------------------------*/
+header {
+    background-color: #1e293b; /* Azul gris oscuro */
+    padding: 15px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #f8fafc;
+    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #38bdf8; /* Azul moderno */
+    transition: width 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #38bdf8;
+    transform: translateY(-2px);
+}
+
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+/* ------------------------------
+   Sección principal
+--------------------------------*/
+main {
+    flex: 1;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+h1 {
+    color: #0f172a;
+    margin-bottom: 15px;
+    font-size: 2rem;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+}
+
+h1::after {
+    content: '';
+    display: block;
+    width: 60%;
+    margin: 8px auto 0;
+    height: 3px;
+    background-color: #38bdf8;
+    border-radius: 2px;
+}
+
+p {
+    max-width: 700px;
+    margin: 0 auto;
+    color: #475569;
+    font-size: 1.1rem;
+}
+
+/* ------------------------------
+   Botones (opcional)
+--------------------------------*/
+button, .btn {
+    background-color: #38bdf8;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover, .btn:hover {
+    background-color: #0ea5e9;
+    transform: translateY(-2px);
+}
+
+/* ------------------------------
+   Pie de página
+--------------------------------*/
+footer {
+    background-color: #1e293b;
+    color: #f1f5f9;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.9rem;
+    margin-top: auto;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+}
+/* ------------------------------
+   Menús desplegables
+--------------------------------*/
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #1e293b;
+    min-width: 200px;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    z-index: 10;
+}
+
+.dropdown-content li {
+    width: 100%;
+}
+
+.dropdown-content li a {
+    display: block;
+    padding: 10px 15px;
+    color: #e2e8f0;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.2s ease;
+}
+
+.dropdown-content li a:hover {
+    background-color: #334155;
+    color: #38bdf8;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Asegura buen espaciado en el menú principal */
+.dropdown-menu {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-menu > li > a {
+    color: #f8fafc;
+    font-weight: 600;
+    padding: 10px;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.dropdown-menu > li > a:hover {
+    color: #38bdf8;
+    transform: translateY(-2px);
+}
+.imagen-inicio {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.imagen-inicio img {
+    max-width: 150px;  /* Cambia el tamaño si querés */
+    height: auto;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.imagen-inicio img:hover {
+    transform: scale(1.1);
+}
+body {
+        background: linear-gradient(135deg, #e0eafc, #cfdef3);
+        font-family: 'Poppins', sans-serif;
+        color: #333;
+    }
+
+    .card {
+        width: 90%;
+        max-width: 800px;
+        background: #ffffff;
+        margin: 30px auto;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        padding: 25px 30px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    input[type="text"], input[type="boolean"] {
+        padding: 12px;
+        border: 1px solid #ccd7e0;
+        border-radius: 12px;
+        outline: none;
+        transition: all 0.2s ease;
+        background-color: #f8f9fb;
+    }
+
+    input:focus {
+        border-color: #4b6cb7;
+        box-shadow: 0 0 8px rgba(75,108,183,0.3);
+        background-color: #ffffff;
+    }
+
+    button {
+        padding: 12px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        color: white;
+        cursor: pointer;
+        background: linear-gradient(135deg, #4b6cb7, #182848);
+        transition: all 0.3s ease;
+    }
+
+    button:hover {
+        opacity: 0.9;
+        transform: scale(1.02);
+    }
+
+    .delete-btn {
+        background: linear-gradient(135deg, #ff5858, #f857a6);
+    }
+
+    .search-form {
+        display: flex;
+        gap: 10px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    }
+
+    th {
+        background: linear-gradient(135deg, #4b6cb7, #182848);
+        color: white;
+        padding: 12px;
+        text-align: center;
+    }
+
+    td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+        background-color: #f4f6fb;
+    }
+
+  

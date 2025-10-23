@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+
+<div class="usuarios-wrapper">
+  <!-- FORMULARIO -->
+  <section class="formulario">
+    <h2>{{ "Crear Usuario" if modo == "crear" else "Actualizar Usuario" }}</h2>
+
+    <form method="post"
+          action="{{ url_for('rutas_usuario.crear_usuario') if modo == 'crear' else url_for('rutas_usuario.actualizar_usuario') }}">
+      <div class="campo">
+        <label>ID</label>
+        <input type="text" name="id" value="{{ usuario.id if usuario else '' }}" readonly>
+      </div>
+
+      <div class="campo">
+        <label>Email</label>
+        <input type="email" name="email" value="{{ usuario.email if usuario else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Contraseña</label>
+        <input type="text" name="contrasena" value="{{ usuario.contrasena if usuario else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Ruta Avatar</label>
+        <input type="text" name="ruta_avatar" value="{{ usuario.ruta_avatar if usuario else '' }}">
+      </div>
+
+      <div class="campo">
+        <label>Activo</label>
+        <input type="text" name="activo" value="{{ usuario.activo if usuario else '' }}" required>
+      </div>
+
+      <button type="submit" class="btn-principal">
+        {{ "Crear" if modo == "crear" else "Actualizar" }}
+      </button>
+    </form>
+
+    <form method="post" action="{{ url_for('rutas_usuario.buscar_usuario') }}" class="buscar-form">
+      <input type="text" name="codigo_buscar" placeholder="Buscar por ID" required>
+      <button type="submit" class="btn-secundario">Buscar</button>
+    </form>
+
+    {% if mensaje %}
+      <p class="mensaje">{{ mensaje }}</p>
+    {% endif %}
+  </section>
+
+  <!-- TABLA -->
+  <section class="tabla">
+    <h2>Lista de Usuarios</h2>
+    <div class="tabla-contenedor">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Contraseña</th>
+            <th>Avatar</th>
+            <th>Activo</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in usuarios %}
+          <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.contrasena }}</td>
+            <td>{{ u.ruta_avatar }}</td>
+            <td>{{ u.activo }}</td>
+            <td>
+              <form method="post" action="{{ url_for('rutas_usuario.eliminar_usuario', codigo=u.id) }}">
+                <button type="submit" class="btn-eliminar">🗑️</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

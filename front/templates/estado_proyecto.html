@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+
+<div class="usuarios-wrapper">
+
+  <!-- === FORMULARIO IZQUIERDA === -->
+  <div class="formulario">
+    <h2>{{ "Crear Estado_Proyecto" if modo == "crear" else "Actualizar Estado_Proyecto" }}</h2>
+
+    <form method="post" 
+          action="{{ url_for('rutas_estado_proyecto.crear_estado_proyecto') if modo == 'crear' else url_for('rutas_estado_proyecto.actualizar_estado_proyecto') }}">
+      
+
+        
+      <div class="campo">
+        <label>ID Estado</label>
+        <select name="id_estado" required>
+          <option value="">Seleccione un estado</option>
+          {% for e in estado %}
+            <option value="{{ e.id }}"
+              {% if estado_proyecto and estado_proyecto.id_estado == e.id %}selected{% endif %}>
+              {{ e.titulo if e.titulo else "Proyecto " ~ e.id }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="campo">
+        <label>ID Estado</label>
+        <select name="id_proyecto" required>
+          <option value="">Seleccione un proyecto</option>
+          {% for p in proyectos %}
+            <option value="{{ p.id }}"
+              {% if meta_proyecto and meta_proyecto.id_proyecto == p.id %}selected{% endif %}>
+              {{ p.titulo if p.titulo else "Proyecto " ~ p.id }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" class="btn-principal">
+        {{ "Crear" if modo == "crear" else "Actualizar" }}
+      </button>
+    </form>
+
+    <!-- FORMULARIO DE BÚSQUEDA -->
+    <form method="post" action="{{ url_for('rutas_estado_proyecto.buscar_estado_proyecto') }}" class="buscar-form">
+      <input type="text" name="codigo_buscar" placeholder="Buscar por ID Proyecto" required>
+      <button type="submit" class="btn-secundario">Buscar</button>
+    </form>
+
+    {% if mensaje %}
+      <p class="mensaje">{{ mensaje }}</p>
+    {% endif %}
+  </div>
+
+  <!-- === TABLA DERECHA === -->
+  <div class="tabla">
+    <h2>Lista de Estado_Proyecto</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID Proyecto</th>
+          <th>ID Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ep in estado_proyectos %}
+        <tr>
+          <td>{{ ep.id_proyecto }}</td>
+          <td>{{ ep.id_estado }}</td>
+          <td>
+            <form method="post" action="{{ url_for('rutas_estado_proyecto.eliminar_estado_proyecto', codigo=ep.id_proyecto) }}">
+              <button type="submit" class="btn-eliminar">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<div class="usuarios-wrapper">
+<link rel="stylesheet" href="{{ url_for('static', filename='tipo_proyecto.css') }}">
+
+    <!-- === FORMULARIO IZQUIERDA === -->
+    <div class="formulario">
+        <h2>{{ "Crear Tipo de Proyecto" if modo == "crear" else "Actualizar Tipo de Proyecto" }}</h2>
+
+        <form method="post" 
+              action="{{ url_for('rutas_tipo_proyecto.crear_tipo_proyecto') if modo == 'crear' else url_for('rutas_tipo_proyecto.actualizar_tipo_proyecto') }}">
+            
+            <div class="campo">
+                <label>ID</label>
+                <input type="text" name="id" placeholder="ID"
+                       value="{{ tipo_proyecto.id if tipo_proyecto else '' }}" required readonly>
+            </div>
+
+            <div class="campo">
+                <label>Nombre</label>
+                <input type="text" name="nombre" placeholder="Nombre"
+                       value="{{ tipo_proyecto.nombre if tipo_proyecto else '' }}" required>
+            </div>
+
+            <div class="campo">
+                <label>Descripción</label>
+                <input type="text" name="descripcion" placeholder="Descripción"
+                       value="{{ tipo_proyecto.descripcion if tipo_proyecto else '' }}" required>
+            </div>
+
+            <button type="submit" class="btn-principal">
+                {{ "Crear" if modo == "crear" else "Actualizar" }}
+            </button>
+        </form>
+
+        <!-- FORMULARIO DE BÚSQUEDA -->
+        <form method="post" action="{{ url_for('rutas_tipo_proyecto.buscar_tipo_proyecto') }}" class="buscar-form">
+            <input type="text" name="codigo_buscar" placeholder="Buscar por ID" required>
+            <button type="submit" class="btn-secundario">Buscar</button>
+        </form>
+
+        {% if mensaje %}
+            <p class="mensaje">{{ mensaje }}</p>
+        {% endif %}
+    </div>
+
+    <!-- === TABLA DERECHA === -->
+    <div class="tabla">
+        <h2>Lista de Tipos de Proyectos</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tipos_proyectos %}
+                <tr>
+                    <td>{{ t.id }}</td>
+                    <td>{{ t.nombre }}</td>
+                    <td>{{ t.descripcion }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('rutas_tipo_proyecto.eliminar_tipo_proyecto', codigo=t.id) }}">
+                            <button type="submit" class="btn-eliminar">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

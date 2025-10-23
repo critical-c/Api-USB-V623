@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block titulo_pagina %}Proyecto Flask con Jinja2{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+<body>
+    <!-- Menú de navegación principal -->
+    <header>
+        <nav>
+            <ul class="dropdown-menu">
+                <li><a href="{{ url_for('inicio') }}">Inicio</a></li>
+                <li><a href="{{ url_for('acerca') }}">Acerca</a></li>
+
+                <!-- Ejemplo de menú desplegable -->
+                <li class="dropdown">
+                    <a href="#">Usuarios</a>
+                    <ul class="dropdown-content">
+                        <li><a href="{{ url_for('rutas_usuario.usuario') }}">Listar Usuarios</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#">Proyectos</a>
+                    <ul class="dropdown-content">
+                        <li><a href="{{ url_for('rutas_tipo_proyecto.tipo_proyecto') }}">Tipos de Proyecto</a></li>
+                        <li><a href="{{ url_for('rutas_estado.estado') }}">Estados</a></li>
+                        <li><a href="{{ url_for('rutas_tipo_producto.tipo_producto') }}">Tipos de Producto</a></li>
+                        <li><a href="{{ url_for('rutas_tipo_responsable.tipo_responsable') }}">Tipos de Responsable</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="{{ url_for('rutas_entregable.entregable') }}">Entregables</a></li>
+                <li><a href="{{ url_for('rutas_variable_estrategica.variable_estrategica') }}">Variables Estratégicas</a></li>
+
+                <li><a href="{{ url_for('rutas_actividad.actividad') }}">Actividad</a></li>
+                <li><a href="{{ url_for('rutas_archivo.archivo') }}">Archivo</a></li>
+                <li><a href="{{ url_for('rutas_archivo_entregable.archivo_entregable') }}">Archivo Entregable</a></li>
+                <li><a href="{{ url_for('rutas_distribucion_presupuesto.distribucion_presupuesto') }}">Distribución Presupuesto</a></li>
+                <li><a href="{{ url_for('rutas_ejecucion_presupuesto.ejecucion_presupuesto') }}">Ejecución Presupuesto</a></li>
+                <li><a href="{{ url_for('rutas_estado_proyecto.estado_proyecto') }}">Estado Proyecto</a></li>
+                <li><a href="{{ url_for('rutas_meta_estrategica.meta_estrategica') }}">Meta Estratégica</a></li>
+                <li><a href="{{ url_for('rutas_meta_proyecto.meta_proyecto') }}">Meta Proyecto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Contenido principal -->
+    <main>
+        <h1>{% block encabezado %}{% endblock %}</h1>
+        <section>
+            {% block contenido %}{% endblock %}
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>Proyecto Flask con Jinja2 - © 2025</p>
+    </footer>
+</body>
+</html>

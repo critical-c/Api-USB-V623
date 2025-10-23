@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block titulo_pagina %}
+Inicio - Proyecto Flask con Jinja2
+{% endblock %}
+
+{% block encabezado %}
+<div class="imagen-inicio">
+    <img src="{{ url_for('static', filename='IMG/gengar.gif') }}" alt="Gengar animado">
+</div>
+
+Página inicial del Proyecto
+{% endblock %}
+
+{% block contenido %}
+<p>Esta es la página inicial del proyecto, donde se presenta una vista general del sistema y se proporciona acceso a los módulos principales para su gestión.</p>
+{% endblock %}
+
+

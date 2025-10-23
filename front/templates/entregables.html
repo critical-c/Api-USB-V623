@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+
+<div class="usuarios-wrapper">
+
+  <!-- === FORMULARIO IZQUIERDA === -->
+  <div class="formulario">
+    <h2>{{ "Crear Entregable" if modo == "crear" else "Actualizar Entregable" }}</h2>
+
+    <form method="post" 
+          action="{{ url_for('rutas_entregable.crear_entregable') if modo == 'crear' else url_for('rutas_entregable.actualizar_entregable') }}">
+      
+      <div class="campo">
+        <label>ID</label>
+        <input type="text" name="id" value="{{ entregable.id if entregable else '' }}" readonly>
+      </div>
+
+      <div class="campo">
+        <label>Código</label>
+        <input type="text" name="codigo" placeholder="Código del entregable"
+               value="{{ entregable.codigo if entregable else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Título</label>
+        <input type="text" name="titulo" placeholder="Título"
+               value="{{ entregable.titulo if entregable else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Descripción</label>
+        <input type="text" name="descripcion" placeholder="Descripción"
+               value="{{ entregable.descripcion if entregable else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Fecha de inicio</label>
+        <input type="date" name="fecha_inicio" value="{{ entregable.fecha_inicio if entregable else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Fecha fin prevista</label>
+        <input type="date" name="fecha_fin_prevista" value="{{ entregable.fecha_fin_prevista if entregable else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Fecha de modificación</label>
+        <input type="date" name="fecha_modificacion" value="{{ entregable.fecha_modificacion if entregable else '' }}">
+      </div>
+
+      <div class="campo">
+        <label>Fecha de finalización</label>
+        <input type="date" name="fecha_finalizacion" value="{{ entregable.fecha_finalizacion if entregable else '' }}">
+      </div>
+
+      <button type="submit" class="btn-principal">
+        {{ "Crear" if modo == "crear" else "Actualizar" }}
+      </button>
+    </form>
+
+    <!-- FORMULARIO DE BÚSQUEDA -->
+    <form method="post" action="{{ url_for('rutas_entregable.buscar_entregable') }}" class="buscar-form">
+      <input type="text" name="codigo_buscar" placeholder="Buscar por ID" required>
+      <button type="submit" class="btn-secundario">Buscar</button>
+    </form>
+
+    {% if mensaje %}
+      <p class="mensaje">{{ mensaje }}</p>
+    {% endif %}
+  </div>
+
+  <!-- === TABLA DERECHA === -->
+  <div class="tabla">
+    <h2>Lista de Entregables</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Código</th>
+          <th>Título</th>
+          <th>Descripción</th>
+          <th>Inicio</th>
+          <th>Fin Prevista</th>
+          <th>Modificación</th>
+          <th>Finalización</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in entregables %}
+        <tr>
+          <td>{{ e.id }}</td>
+          <td>{{ e.codigo }}</td>
+          <td>{{ e.titulo }}</td>
+          <td>{{ e.descripcion }}</td>
+          <td>{{ e.fecha_inicio }}</td>
+          <td>{{ e.fecha_fin_prevista }}</td>
+          <td>{{ e.fecha_modificacion }}</td>
+          <td>{{ e.fecha_finalizacion }}</td>
+          <td>
+            <form method="post" action="{{ url_for('rutas_entregable.eliminar_entregable', codigo=e.id) }}">
+              <button type="submit" class="btn-eliminar">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}
