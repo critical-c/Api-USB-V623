@@ -47,15 +47,12 @@
       </button>
     </form>
 
+    <!-- Buscar solo por ID del responsable -->
     <form method="post" action="{{ url_for('rutas_responsable_entregable.buscar_responsable_entregable') }}" class="buscar-form">
-      <input type="text" name="id_responsable_buscar" placeholder="ID Responsable" required>
-      <input type="text" name="id_entregable_buscar" placeholder="ID Entregable" required>
+      <input type="text" name="id_responsable_buscar" placeholder="Buscar por ID Responsable" required>
       <button type="submit" class="btn-secundario">Buscar</button>
     </form>
 
-    {% if mensaje %}
-      <p class="mensaje">{{ mensaje }}</p>
-    {% endif %}
   </div>
 
   <div class="tabla">
