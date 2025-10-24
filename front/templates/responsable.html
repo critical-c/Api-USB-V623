@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+
+<div class="usuarios-wrapper">
+
+  <div class="formulario">
+    <h2>{{ "Crear Responsable" if modo == "crear" else "Actualizar Responsable" }}</h2>
+
+    <form method="post"
+          action="{{ url_for('rutas_responsable.crear_responsable') if modo == 'crear' else url_for('rutas_responsable.actualizar_responsable') }}">
+
+      {% if modo == 'actualizar' %}
+      <div class="campo">
+        <label>ID</label>
+        <input type="text" name="id" value="{{ responsable.id }}" readonly>
+      </div>
+      {% endif %}
+
+      <div class="campo">
+        <label>ID Tipo Responsable</label>
+        <select name="id_tipo_responsable" {% if modo == 'actualizar' %}disabled{% endif %} required>
+          <option value="">Seleccione un tipo</option>
+          {% for tipo in tipos_responsable %}
+            <option value="{{ tipo.id }}"
+              {% if responsable and responsable.id_tipo_responsable == tipo.id %}selected{% endif %}>
+              {{ tipo.titulo }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="campo">
+        <label>ID Usuario</label>
+        <select name="id_usuario" {% if modo == 'actualizar' %}disabled{% endif %} required>
+          <option value="">Seleccione un usuario</option>
+          {% for u in usuarios %}
+            <option value="{{ u.id }}"
+              {% if responsable and responsable.id_usuario == u.id %}selected{% endif %}>
+              {{ u.email }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="campo">
+        <label>Nombre del Responsable</label>
+        <input type="text" name="nombre"
+               placeholder="Nombre completo"
+               value="{{ responsable.nombre if responsable else '' }}" required>
+      </div>
+
+      <button type="submit" class="btn-principal">
+        {{ "Crear" if modo == "crear" else "Actualizar" }}
+      </button>
+    </form>
+
+    <form method="post" action="{{ url_for('rutas_responsable.buscar_responsable') }}" class="buscar-form">
+      <input type="text" name="codigo_buscar" placeholder="Buscar por ID" required>
+      <button type="submit" class="btn-secundario">Buscar</button>
+    </form>
+  </div>
+
+  <div class="tabla">
+    <h2>Lista de Responsables</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tipo Responsable</th>
+          <th>Usuario</th>
+          <th>Nombre</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in responsables %}
+        <tr>
+          <td>{{ r.id }}</td>
+          <td>{{ r.id_tipo_responsable }}</td>
+          <td>{{ r.id_usuario }}</td>
+          <td>{{ r.nombre }}</td>
+          <td>
+            <form method="post" action="{{ url_for('rutas_responsable.eliminar_responsable', codigo=r.id) }}">
+              <button type="submit" class="btn-eliminar">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

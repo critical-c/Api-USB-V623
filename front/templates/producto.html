@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+
+<div class="usuarios-wrapper">
+
+  <div class="formulario">
+    <h2>{{ "Crear Producto" if modo == "crear" else "Actualizar Producto" }}</h2>
+
+    <form method="post"
+          action="{{ url_for('rutas_producto.crear_producto') if modo == 'crear' else url_for('rutas_producto.actualizar_producto') }}">
+
+      {% if modo == 'actualizar' %}
+      <div class="campo">
+        <label>ID</label>
+        <input type="text" name="id" value="{{ producto.id }}" readonly>
+      </div>
+      {% endif %}
+
+      <div class="campo">
+        <label>ID Tipo Producto</label>
+        <select name="id_tipo_producto" {% if modo == 'actualizar' %}disabled{% endif %}>
+          <option value="">Seleccione un tipo</option>
+          {% for t in tipos %}
+            <option value="{{ t.id }}"
+              {% if producto and producto.id_tipo_producto == t.id %}selected{% endif %}>
+              {{ t.nombre if t.nombre else "Tipo " ~ t.id }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="campo">
+        <label>Código</label>
+        <input type="text" name="codigo" placeholder="Ej: PRD-001"
+               value="{{ producto.codigo if producto else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Título</label>
+        <input type="text" name="titulo"
+               placeholder="Título del producto"
+               value="{{ producto.titulo if producto else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Descripción</label>
+        <input type="text" name="descripcion"
+               placeholder="Descripción breve"
+               value="{{ producto.descripcion if producto else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Fecha Inicio</label>
+        <input type="date" name="fecha_inicio"
+               value="{{ producto.fecha_inicio if producto else '' }}">
+      </div>
+
+      <div class="campo">
+        <label>Fecha Fin Prevista</label>
+        <input type="date" name="fecha_fin_prevista"
+               value="{{ producto.fecha_fin_prevista if producto else '' }}">
+      </div>
+
+      <div class="campo">
+        <label>Ruta Logo</label>
+        <input type="text" name="ruta_logo" placeholder="/img/logo.png"
+               value="{{ producto.ruta_logo if producto else '' }}">
+      </div>
+
+      <button type="submit" class="btn-principal">
+        {{ "Crear" if modo == "crear" else "Actualizar" }}
+      </button>
+    </form>
+
+    <form method="post" action="{{ url_for('rutas_producto.buscar_producto') }}" class="buscar-form">
+      <input type="text" name="codigo_buscar" placeholder="Buscar por ID" required>
+      <button type="submit" class="btn-secundario">Buscar</button>
+    </form>
+
+    {% if mensaje %}
+      <p class="mensaje">{{ mensaje }}</p>
+    {% endif %}
+  </div>
+
+  <div class="tabla">
+    <h2>Lista de Productos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>ID Tipo Producto</th>
+          <th>Código</th>
+          <th>Título</th>
+          <th>Descripción</th>
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin Prevista</th>
+          <th>Ruta Logo</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in productos %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.id_tipo_producto }}</td>
+          <td>{{ p.codigo }}</td>
+          <td>{{ p.titulo }}</td>
+          <td>{{ p.descripcion }}</td>
+          <td>{{ p.fecha_inicio }}</td>
+          <td>{{ p.fecha_fin_prevista }}</td>
+          <td>{{ p.ruta_logo }}</td>
+          <td>
+            <form method="post" action="{{ url_for('rutas_producto.eliminar_producto', codigo=p.id) }}">
+              <button type="submit" class="btn-eliminar">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+
+<div class="usuarios-wrapper">
+
+  <!-- === FORMULARIO IZQUIERDA === -->
+  <div class="formulario">
+    <h2>{{ "Crear Presupuesto" if modo == "crear" else "Actualizar Presupuesto" }}</h2>
+
+    <form method="post" 
+          action="{{ url_for('rutas_presupuesto.crear_presupuesto') if modo == 'crear' else url_for('rutas_presupuesto.actualizar_presupuesto') }}">
+      
+      <div class="campo">
+        <label>ID</label>
+        <input type="text" name="id" placeholder="ID"
+               value="{{ presupuesto.id if presupuesto else '' }}" readonly>
+      </div>
+
+      <!-- SELECT DE PROYECTO -->
+      <div class="campo">
+        <label>Proyecto</label>
+        <select name="id_proyecto" required>
+          <option value="">Seleccione un proyecto</option>
+          {% for p in proyectos %}
+            <option value="{{ p.id }}" {% if presupuesto and presupuesto.id_proyecto == p.id %}selected{% endif %}>
+              {{ p.nombre }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- SELECT DE ESTADO -->
+      <div class="campo">
+        <label>Estado</label>
+        <select name="estado" required>
+          <option value="">Seleccione un estado</option>
+          {% for e in estados %}
+            <option value="{{ e.id }}" {% if presupuesto and presupuesto.estado == e.id %}selected{% endif %}>
+              {{ e.nombre }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="campo">
+        <label>Monto Solicitado</label>
+        <input type="number" name="monto_solicitado" placeholder="Monto solicitado"
+               value="{{ presupuesto.monto_solicitado if presupuesto else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Monto Aprobado</label>
+        <input type="number" name="monto_aprobado" placeholder="Monto aprobado"
+               value="{{ presupuesto.monto_aprobado if presupuesto else '' }}">
+      </div>
+
+      <div class="campo">
+        <label>Periodo (Año)</label>
+        <input type="number" name="periodo_anio" placeholder="Año"
+               value="{{ presupuesto.periodo_anio if presupuesto else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Fecha de Solicitud</label>
+        <input type="date" name="fecha_solicitud"
+               value="{{ presupuesto.fecha_solicitud if presupuesto else '' }}" required>
+      </div>
+
+      <div class="campo">
+        <label>Fecha de Aprobación</label>
+        <input type="date" name="fecha_aprobacion"
+               value="{{ presupuesto.fecha_aprobacion if presupuesto else '' }}">
+      </div>
+
+      <div class="campo">
+        <label>Observaciones</label>
+        <input type="text" name="observaciones" placeholder="Observaciones"
+               value="{{ presupuesto.observaciones if presupuesto else '' }}">
+      </div>
+
+      <button type="submit" class="btn-principal">
+        {{ "Crear" if modo == "crear" else "Actualizar" }}
+      </button>
+    </form>
+
+    <!-- FORMULARIO DE BÚSQUEDA -->
+    <form method="post" action="{{ url_for('rutas_presupuesto.buscar_presupuesto') }}" class="buscar-form">
+      <input type="text" name="codigo_buscar" placeholder="Buscar por ID" required>
+      <button type="submit" class="btn-secundario">Buscar</button>
+    </form>
+
+    {% if mensaje %}
+      <p class="mensaje">{{ mensaje }}</p>
+    {% endif %}
+  </div>
+
+  <!-- === TABLA DERECHA === -->
+  <div class="tabla">
+    <h2>Lista de Presupuestos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Proyecto</th>
+          <th>Estado</th>
+          <th>Monto Solicitado</th>
+          <th>Monto Aprobado</th>
+          <th>Periodo</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in presupuestos %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.id_proyecto }}</td>
+          <td>{{ p.estado }}</td>
+          <td>{{ p.monto_solicitado }}</td>
+          <td>{{ p.monto_aprobado }}</td>
+          <td>{{ p.periodo_anio }}</td>
+          <td>
+            <form method="post" action="{{ url_for('rutas_presupuesto.eliminar_presupuesto', codigo=p.id) }}">
+              <button type="submit" class="btn-eliminar">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

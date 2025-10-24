@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+
+<div class="usuarios-wrapper">
+
+  <div class="formulario">
+    <h2>{{ "Crear Asociación Producto-Entregable" if modo == "crear" else "Actualizar Asociación" }}</h2>
+
+    <form method="post"
+          action="{{ url_for('rutas_producto_entregable.crear_producto_entregable') if modo == 'crear' else url_for('rutas_producto_entregable.actualizar_producto_entregable') }}">
+
+
+
+      <div class="campo">
+        <label>Producto</label>
+        <select name="id_producto" required>
+          <option value="">Seleccione un presupuesto</option>
+          {% for pp in productos %}
+            <option value="{{ pp.id }}"
+              {% if producto_entregable and producto_entregable.id_producto == pp.id %}selected{% endif %}>
+              {{ pp.titulo if pp.titulo else "Producto " ~ pp.id }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      {% if modo == 'actualizar' %}
+      <div class="campo">
+        <label>ID Entregable</label>
+        <input type="text" name="id_entregable" value="{{ asociacion.id_entregable }}" readonly>
+      </div>
+      {% else %}
+      <div class="campo">
+        <label>Entregable</label>
+        <select name="id_entregable" required>
+          <option value="">Seleccione un entregable</option>
+          {% for e in entregables %}
+            <option value="{{ e.id }}" {% if asociacion and asociacion.id_entregable == e.id %}selected{% endif %}>
+              {{ e.id }} - {{ e.titulo if e.titulo else "Entregable " ~ e.id }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+
+      <div class="campo">
+        <label>Fecha de Asociación</label>
+        <input type="date" name="fecha_asociacion"
+               value="{{ asociacion.fecha_asociacion if asociacion else '' }}" required>
+      </div>
+
+      <button type="submit" class="btn-principal">
+        {{ "Crear" if modo == "crear" else "Actualizar" }}
+      </button>
+    </form>
+
+    <form method="post" action="{{ url_for('rutas_producto_entregable.buscar_producto_entregable') }}" class="buscar-form">
+      <input type="text" name="codigo_buscar" placeholder="Buscar por ID Producto" required>
+      <button type="submit" class="btn-secundario">Buscar</button>
+    </form>
+
+    {% if mensaje %}
+      <p class="mensaje">{{ mensaje }}</p>
+    {% endif %}
+  </div>
+
+  <div class="tabla">
+    <h2>Lista de Asociaciones Producto-Entregable</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID Producto</th>
+          <th>Título Producto</th>
+          <th>ID Entregable</th>
+          <th>Título Entregable</th>
+          <th>Fecha Asociación</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in asociaciones %}
+        <tr>
+          <td>{{ a.id_producto }}</td>
+          <td>{{ a.titulo_producto if a.titulo_producto else "Sin título" }}</td>
+          <td>{{ a.id_entregable }}</td>
+          <td>{{ a.titulo_entregable if a.titulo_entregable else "Sin título" }}</td>
+          <td>{{ a.fecha_asociacion }}</td>
+          <td>
+            <form method="post" action="{{ url_for('rutas_producto_entregable.eliminar_producto_entregable', codigo=a.id_producto) }}">
+              <button type="submit" class="btn-eliminar">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

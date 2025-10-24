@@ -18,6 +18,14 @@ from rutas.rutas_ejecucion_presupuesto import rutas_ejecucion_presupuesto
 from rutas.rutas_estado_proyecto import rutas_estado_proyecto
 from rutas.rutas_meta_estrategica import rutas_meta_estrategica
 from rutas.rutas_meta_proyecto import rutas_meta_proyecto
+from rutas.rutas_objetivo_estrategico import rutas_objetivo_estrategico
+from rutas.rutas_presupuesto import rutas_presupuesto
+from rutas.rutas_proyecto import rutas_proyecto
+from rutas.rutas_responsable import rutas_responsable
+from rutas.rutas_producto import rutas_producto
+from rutas.rutas_proyecto_producto import rutas_proyecto_producto
+from rutas.rutas_producto_entregable import rutas_producto_entregable
+from rutas.rutas_responsable_entregable import rutas_responsable_entregable
 
 # Crear la instancia de la aplicación Flask
 aplicacion = Flask(__name__)
@@ -40,6 +48,14 @@ aplicacion.register_blueprint(rutas_ejecucion_presupuesto)
 aplicacion.register_blueprint(rutas_estado_proyecto)
 aplicacion.register_blueprint(rutas_meta_estrategica)
 aplicacion.register_blueprint(rutas_meta_proyecto)
+aplicacion.register_blueprint(rutas_objetivo_estrategico)
+aplicacion.register_blueprint(rutas_presupuesto)
+aplicacion.register_blueprint(rutas_proyecto)
+aplicacion.register_blueprint(rutas_responsable)
+aplicacion.register_blueprint(rutas_producto)
+aplicacion.register_blueprint(rutas_proyecto_producto)
+aplicacion.register_blueprint(rutas_producto_entregable)
+aplicacion.register_blueprint(rutas_responsable_entregable)
 
 # ------------------- Rutas principales -------------------
 

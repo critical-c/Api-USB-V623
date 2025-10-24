@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<link rel="stylesheet" href="{{ url_for('static', filename='usuarios.css') }}">
+
+<div class="usuarios-wrapper">
+
+  <!-- Formulario -->
+  <div class="formulario">
+    <h2>{{ "Crear Asociación Proyecto-Producto" if modo == "crear" else "Actualizar Asociación" }}</h2>
+
+    <form method="post"
+          action="{{ url_for('rutas_proyecto_producto.crear_proyecto_producto') if modo == 'crear' else url_for('rutas_proyecto_producto.actualizar_proyecto_producto') }}">
+
+      {% if modo == 'actualizar' %}
+      <div class="campo">
+        <label>ID Proyecto (Bloqueado)</label>
+        <input type="text" name="id_proyecto" value="{{ asociacion.id_proyecto }}" readonly>
+      </div>
+      {% endif %}
+
+      {% if modo == 'crear' %}
+      <div class="campo">
+        <label>Proyecto</label>
+        <select name="id_proyecto" required>
+          <option value="">Seleccione un proyecto</option>
+          {% for p in proyectos %}
+            <option value="{{ p.id }}"
+              {% if asociacion and asociacion.id_proyecto == p.id %}selected{% endif %}>
+              {{ p.titulo if p.titulo else "Proyecto " ~ p.id }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+
+      {% if modo == 'actualizar' %}
+      <div class="campo">
+        <label>ID Producto (Bloqueado)</label>
+        <input type="text" name="id_producto" value="{{ asociacion.id_producto }}" readonly>
+      </div>
+      {% endif %}
+
+      {% if modo == 'crear' %}
+      <div class="campo">
+        <label>Producto</label>
+        <select name="id_producto" required>
+          <option value="">Seleccione un producto</option>
+          {% for prod in productos %}
+            <option value="{{ prod.id }}"
+              {% if asociacion and asociacion.id_producto == prod.id %}selected{% endif %}>
+              {{ prod.titulo if prod.titulo else "Producto " ~ prod.id }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+
+      <div class="campo">
+        <label>Fecha de Asociación</label>
+        <input type="date" name="fecha_asociacion"
+               value="{{ asociacion.fecha_asociacion if asociacion else '' }}" required>
+      </div>
+
+      <button type="submit" class="btn-principal">
+        {{ "Crear" if modo == "crear" else "Actualizar" }}
+      </button>
+    </form>
+
+    <!-- Buscar -->
+    <form method="post" action="{{ url_for('rutas_proyecto_producto.buscar_proyecto_producto') }}" class="buscar-form">
+      <input type="text" name="codigo_buscar" placeholder="Buscar por ID Proyecto" required>
+      <button type="submit" class="btn-secundario">Buscar</button>
+    </form>
+
+    {% if mensaje %}
+      <p class="mensaje">{{ mensaje }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Tabla -->
+  <div class="tabla">
+    <h2>Lista de Asociaciones Proyecto-Producto</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID Proyecto</th>
+          <th>ID Producto</th>
+          <th>Fecha Asociación</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in asociaciones %}
+        <tr>
+          <td>{{ a.id_proyecto }}</td>
+          <td>{{ a.id_producto }}</td>
+          <td>{{ a.fecha_asociacion }}</td>
+          <td>
+            <form method="post"
+                  action="{{ url_for('rutas_proyecto_producto.eliminar_proyecto_producto', codigo=a.id_proyecto) }}">
+              <button type="submit" class="btn-eliminar">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}
