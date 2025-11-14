@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 import requests
+from datetime import datetime
 
 rutas_proyecto_producto = Blueprint("rutas_proyecto_producto", __name__)
 
@@ -7,6 +8,18 @@ rutas_proyecto_producto = Blueprint("rutas_proyecto_producto", __name__)
 API_PROYECTO_PRODUCTO_URL = "http://localhost:5031/api/proyecto_producto"
 API_PROYECTO_URL = "http://localhost:5031/api/proyecto"
 API_PRODUCTO_URL = "http://localhost:5031/api/producto"
+API_PROYECTO_PRODUCTO_VIEW = "http://localhost:5031/api/view_proyecto_producto"
+
+
+def formatear_fecha(fecha_str):
+    if not fecha_str:
+        return ""
+    for fmt in ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(fecha_str, fmt).strftime("%Y-%m-%d")
+        except ValueError:
+            pass
+    return ""
 
 
 # ------------------- LISTAR asociaciones -------------------
@@ -27,9 +40,15 @@ def proyecto_producto():
         productos = requests.get(API_PRODUCTO_URL).json().get("datos", [])
     except Exception:
         productos = []
+        
+    try:
+        proyecto_producto_view = requests.get(API_PROYECTO_PRODUCTO_VIEW).json().get("datos", [])
+    except Exception:
+        proyecto_producto_view = []
 
     return render_template(
         "proyecto_producto.html",
+        proyecto_producto_view=proyecto_producto_view,
         asociaciones=asociaciones,
         asociacion=None,
         proyectos=proyectos,
@@ -44,16 +63,19 @@ def buscar_proyecto_producto():
     id_buscar = request.form.get("codigo_buscar")
 
     try:
-        respuesta = requests.get(f"{API_PROYECTO_PRODUCTO_URL}/id/{id_buscar}")
+        respuesta = requests.get(f"{API_PROYECTO_PRODUCTO_URL}/id_proyecto/{id_buscar}")
         if respuesta.status_code == 200:
             datos = respuesta.json().get("datos", [])
             if datos:
                 asociacion = datos[0]
+                asociacion["fecha_asociacion"] = formatear_fecha(asociacion.get("fecha_asociacion"))
                 asociaciones = requests.get(API_PROYECTO_PRODUCTO_URL).json().get("datos", [])
                 proyectos = requests.get(API_PROYECTO_URL).json().get("datos", [])
                 productos = requests.get(API_PRODUCTO_URL).json().get("datos", [])
+                proyecto_producto_view = requests.get(API_PROYECTO_PRODUCTO_VIEW).json().get("datos", [])
                 return render_template(
                     "proyecto_producto.html",
+                    proyecto_producto_view=proyecto_producto_view,
                     asociaciones=asociaciones,
                     asociacion=asociacion,
                     proyectos=proyectos,
@@ -94,7 +116,7 @@ def actualizar_proyecto_producto():
     }
 
     try:
-        requests.put(f"{API_PROYECTO_PRODUCTO_URL}/id/{codigo}", json=datos)
+        requests.put(f"{API_PROYECTO_PRODUCTO_URL}/id_proyecto/{codigo}", json=datos)
     except Exception as e:
         print("Error al actualizar asociación:", e)
 
@@ -105,7 +127,7 @@ def actualizar_proyecto_producto():
 @rutas_proyecto_producto.route("/proyecto_producto/eliminar/<string:codigo>", methods=["POST"])
 def eliminar_proyecto_producto(codigo):
     try:
-        requests.delete(f"{API_PROYECTO_PRODUCTO_URL}/id/{codigo}")
+        requests.delete(f"{API_PROYECTO_PRODUCTO_URL}/id_proyecto/{codigo}")
     except Exception as e:
         print("Error al eliminar asociación:", e)
 

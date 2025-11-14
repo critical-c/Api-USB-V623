@@ -85,20 +85,30 @@
       <thead>
         <tr>
           <th>ID Proyecto</th>
+          <th>Código del proyecto</th>
+          <th>Título del proyecto</th>
           <th>ID Producto</th>
-          <th>Fecha Asociación</th>
+          <th>Código del producto</th>
+          <th>Título del producto</th>
+          <th>Tipo de producto</th>
+          <th>Fecha de asociación</th>
           <th>Acción</th>
         </tr>
       </thead>
       <tbody>
-        {% for a in asociaciones %}
+        {% for pv in proyecto_producto_view %}
         <tr>
-          <td>{{ a.id_proyecto }}</td>
-          <td>{{ a.id_producto }}</td>
-          <td>{{ a.fecha_asociacion }}</td>
+          <td>{{ pv.id_proyecto }}</td>
+          <td>{{ pv.codigo_proyecto }}</td>
+          <td>{{ pv.titulo_proyecto }}</td>
+          <td>{{ pv.id_producto }}</td>
+          <td>{{ pv.codigo_producto }}</td>
+          <td>{{ pv.titulo_producto }}</td>
+          <td>{{ pv.tipo_producto }}</td>
+          <td>{{ pv.fecha_asociacion }}</td>
           <td>
             <form method="post"
-                  action="{{ url_for('rutas_proyecto_producto.eliminar_proyecto_producto', codigo=a.id_proyecto) }}">
+                  action="{{ url_for('rutas_proyecto_producto.eliminar_proyecto_producto', codigo=pv.id_proyecto) }}">
               <button type="submit" class="btn-eliminar">🗑️</button>
             </form>
           </td>

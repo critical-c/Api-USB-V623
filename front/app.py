@@ -1,5 +1,5 @@
 # Importar la clase principal de Flask y la función para renderizar plantillas
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, session
 
 # Importar el Blueprint que contiene las rutas de productos
 from rutas.rutas_usuarios import rutas_usuario
@@ -26,9 +26,11 @@ from rutas.rutas_producto import rutas_producto
 from rutas.rutas_proyecto_producto import rutas_proyecto_producto
 from rutas.rutas_producto_entregable import rutas_producto_entregable
 from rutas.rutas_responsable_entregable import rutas_responsable_entregable
+from rutas.rutas_login import rutas_login  # 🚪 Blueprint del login
 
 # Crear la instancia de la aplicación Flask
 aplicacion = Flask(__name__)
+aplicacion.secret_key = 'clave-super-secreta-123'  # 🔐 Necesaria para usar sesiones
 
 # ------------------- Registro de Blueprints -------------------
 # Registrar el Blueprint de productos en la aplicación principal
@@ -56,6 +58,17 @@ aplicacion.register_blueprint(rutas_producto)
 aplicacion.register_blueprint(rutas_proyecto_producto)
 aplicacion.register_blueprint(rutas_producto_entregable)
 aplicacion.register_blueprint(rutas_responsable_entregable)
+aplicacion.register_blueprint(rutas_login)  # 🚪 Registro del Blueprint del login
+
+
+# ------------------- PROTECCIÓN GLOBAL DE RUTAS ---    ----------------
+@aplicacion.before_request
+def proteger_todo():
+    """Bloquea todo el sitio si no hay sesión activa (excepto login y archivos estáticos)."""
+    rutas_publicas = ['rutas_login.login', 'rutas_login.logout', 'static']
+    if not session.get('usuario') and request.endpoint not in rutas_publicas:
+        return redirect(url_for('rutas_login.login'))
+
 
 # ------------------- Rutas principales -------------------
 

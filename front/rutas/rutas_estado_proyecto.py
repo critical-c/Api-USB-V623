@@ -8,6 +8,7 @@ rutas_estado_proyecto = Blueprint("rutas_estado_proyecto", __name__)
 API_URL = "http://localhost:5031/api/estado_proyecto"
 API_PROYECTO = "http://localhost:5031/api/proyecto"
 API_ESTADO = "http://localhost:5031/api/estado"
+API_ESTADO_PROYECTO = "http://localhost:5031/api/view_estado_proyecto"
 
 # ------------------- LISTAR estado_proyecto -------------------
 @rutas_estado_proyecto.route("/estado_proyecto")
@@ -16,12 +17,14 @@ def estado_proyecto():
         estado_proyectos = requests.get(API_URL).json().get("datos", [])
         proyectos = requests.get(API_PROYECTO).json().get("datos", [])
         estado = requests.get(API_ESTADO).json().get("datos", [])
+        estado_view = requests.get(API_ESTADO_PROYECTO).json().get("datos", [])
     except Exception as e:
-        estado_proyectos, proyectos, estado = [], [], []
+        estado_proyectos, proyectos, estado, estado_view= [], [], [], []
         print("Error al conectar con la API:", e)
 
     return render_template(
         "estado_proyecto.html",
+        estado_view=estado_view,
         estado_proyectos=estado_proyectos,
         estado_proyecto=None,
         proyectos=proyectos,
@@ -36,7 +39,7 @@ def buscar_estado_proyecto():
 
     if codigo:
         try:
-            respuesta = requests.get(f"{API_URL}/id/{codigo}")
+            respuesta = requests.get(f"{API_URL}/id_proyecto/{codigo}")
             if respuesta.status_code == 200:
                 datos = respuesta.json().get("datos", [])
                 if datos:
@@ -44,9 +47,10 @@ def buscar_estado_proyecto():
                     estado_proyectos = requests.get(API_URL).json().get("datos", [])
                     proyectos = requests.get(API_PROYECTO).json().get("datos", [])
                     estado = requests.get(API_ESTADO).json().get("datos", [])
+                    estado_view = requests.get(API_ESTADO_PROYECTO).json().get("datos", [])
                     return render_template(
                         "estado_proyecto.html",
-                        estado_proyectos=estado_proyectos,
+                        estado_view=estado_view,
                         estado_proyecto=estado_proyecto,
                         proyectos=proyectos,
                         estado=estado,
@@ -54,13 +58,11 @@ def buscar_estado_proyecto():
                     )
         except Exception as e:
             return f"Error en la búsqueda: {e}"
-
     estado_proyectos = requests.get(API_URL).json().get("datos", [])
     return render_template(
         "estado_proyecto.html",
         estado_proyectos=estado_proyectos,
         estado_proyecto=None,
-        mensaje="Relación estado-proyecto no encontrada",
         modo="crear"
     )
 
@@ -99,7 +101,7 @@ def actualizar_estado_proyecto():
 @rutas_estado_proyecto.route("/estado_proyecto/eliminar/<string:codigo>", methods=["POST"])
 def eliminar_estado_proyecto(codigo):
     try:
-        requests.delete(f"{API_URL}/id/{codigo}")
+        requests.delete(f"{API_URL}/id_proyecto/{codigo}")
     except Exception as e:
         return f"Error al eliminar la relación estado-proyecto: {e}"
 

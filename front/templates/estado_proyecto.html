@@ -20,7 +20,7 @@
           <option value="">Seleccione un proyecto</option>
           {% for p in proyectos %}
             <option value="{{ p.id }}"
-              {% if meta_proyecto and meta_proyecto.id_proyecto == p.id %}selected{% endif %}>
+              {% if estado_proyecto and estado_proyecto.id_proyecto == p.id %}selected{% endif %}>
               {{ p.titulo if p.titulo else "Proyecto " ~ p.id }}
             </option>
           {% endfor %}
@@ -52,9 +52,6 @@
       <button type="submit" class="btn-secundario">Buscar</button>
     </form>
 
-    {% if mensaje %}
-      <p class="mensaje">{{ mensaje }}</p>
-    {% endif %}
   </div>
 
   <!-- === TABLA DERECHA === -->
@@ -64,17 +61,25 @@
       <thead>
         <tr>
           <th>ID Proyecto</th>
+          <th>Código del proyecto</th>
+          <th>Título del proyecto</th>
           <th>ID Estado</th>
+          <th>Nombre del estado</th>
+          <th>Descripción del estado</th>
           <th>Acción</th>
         </tr>
       </thead>
       <tbody>
-        {% for ep in estado_proyectos %}
+        {% for ev in estado_view %}
         <tr>
-          <td>{{ ep.id_proyecto }}</td>
-          <td>{{ ep.id_estado }}</td>
+          <td>{{ ev.id_proyecto }}</td>
+          <td>{{ ev.codigo_proyecto }}</td>
+          <td>{{ ev.titulo_proyecto }}</td>
+          <td>{{ ev.id_estado }}</td>
+          <td>{{ ev.nombre_estado }}</td>
+          <td>{{ ev.descripcion_estado }}</td>
           <td>
-            <form method="post" action="{{ url_for('rutas_estado_proyecto.eliminar_estado_proyecto', codigo=ep.id_proyecto) }}">
+            <form method="post" action="{{ url_for('rutas_estado_proyecto.eliminar_estado_proyecto', codigo=ev.id_proyecto) }}">
               <button type="submit" class="btn-eliminar">🗑️</button>
             </form>
           </td>

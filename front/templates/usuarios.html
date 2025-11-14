@@ -70,7 +70,13 @@
           <tr>
             <td>{{ u.id }}</td>
             <td>{{ u.email }}</td>
-            <td>{{ u.contrasena }}</td>
+            <!--Para la vista de la contraseña y acortarla-->
+            <td class="hash-col">
+              <details>
+                <summary>{{ u.contrasena[:12] }}...</summary>
+                {{ u.contrasena }}
+              </details>
+            </td>
             <td>{{ u.ruta_avatar }}</td>
             <td>{{ u.activo }}</td>
             <td>

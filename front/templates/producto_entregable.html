@@ -66,19 +66,23 @@
         <tr>
           <th>ID Producto</th>
           <th>Título Producto</th>
+          <th>Codigo Producto</th>
           <th>ID Entregable</th>
           <th>Título Entregable</th>
+          <th>Codigo Entregable</th>
           <th>Fecha Asociación</th>
           <th>Acción</th>
         </tr>
       </thead>
       <tbody>
-        {% for a in asociaciones %}
+        {% for a in producto_view %}
         <tr>
           <td>{{ a.id_producto }}</td>
-          <td>{{ a.titulo_producto if a.titulo_producto else "Sin título" }}</td>
+          <td>{{ a.titulo_producto }}</td>
+          <td>{{ a.codigo_producto }}</td>
           <td>{{ a.id_entregable }}</td>
-          <td>{{ a.titulo_entregable if a.titulo_entregable else "Sin título" }}</td>
+          <td>{{ a.titulo_entregable }}</td>
+          <td>{{ a.codigo_entregable }}</td>
           <td>{{ a.fecha_asociacion }}</td>
           <td>
             <form method="post" action="{{ url_for('rutas_producto_entregable.eliminar_producto_entregable', codigo=a.id_producto) }}">

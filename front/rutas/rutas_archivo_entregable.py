@@ -8,6 +8,7 @@ rutas_archivo_entregable = Blueprint("rutas_archivo_entregable", __name__)
 API_URL = "http://localhost:5031/api/archivo_entregable"
 API_ARCHIVO = "http://localhost:5031/api/archivo"
 API_ENTREGABLE = "http://localhost:5031/api/entregable"
+API_ARCHIVOS_ENTREGABLES = "http://localhost:5031/api/view_archivo_entregable"
 
 # ------------------- LISTAR archivo_entregable -------------------
 @rutas_archivo_entregable.route("/archivo_entregable")
@@ -16,12 +17,14 @@ def archivo_entregable():
         archivos_entregables = requests.get(API_URL).json().get("datos", [])
         archivo = requests.get(API_ARCHIVO).json().get("datos", [])
         entregable = requests.get(API_ENTREGABLE).json().get("datos", [])
+        archivos_vista = requests.get(API_ARCHIVOS_ENTREGABLES).json().get("datos", [])
     except Exception as e:
-        archivos_entregables, archivo, entregable = [], [], []
+        archivos_entregables, archivo, entregable,  archivos_vista= [], [], [], []
         print("Error al conectar con la API:", e)
 
     return render_template(
         "archivos_entregables.html",
+        archivos_vista=archivos_vista,
         archivos_entregables=archivos_entregables,
         archivo_entregable=None,
         archivo=archivo,
@@ -44,8 +47,10 @@ def buscar_archivo_entregable():
                     archivos_entregables = requests.get(API_URL).json().get("datos", [])
                     archivo = requests.get(API_ARCHIVO).json().get("datos", [])
                     entregable = requests.get(API_ENTREGABLE).json().get("datos", [])
+                    archivos_vista = requests.get(API_ARCHIVOS_ENTREGABLES).json().get("datos", [])
                     return render_template(
                         "archivos_entregables.html",
+                        archivos_vista=archivos_vista,
                         archivos_entregables=archivos_entregables,
                         archivo_entregable=archivo_entregable,
                         archivo=archivo,

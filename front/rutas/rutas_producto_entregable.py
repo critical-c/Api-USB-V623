@@ -8,6 +8,7 @@ rutas_producto_entregable = Blueprint("rutas_producto_entregable", __name__)
 API_PRODUCTO_ENTREGABLE_URL = "http://localhost:5031/api/producto_entregable"
 API_PRODUCTO_URL = "http://localhost:5031/api/producto"
 API_ENTREGABLE_URL = "http://localhost:5031/api/entregable"
+API_PRODUCTO_VIEW = "http://localhost:5031/api/view_producto_entregable"
 
 def formatear_fecha(fecha_str):
     """
@@ -29,12 +30,14 @@ def producto_entregable():
         asociaciones = requests.get(API_PRODUCTO_ENTREGABLE_URL).json().get("datos", [])
         productos = requests.get(API_PRODUCTO_URL).json().get("datos", [])
         entregables = requests.get(API_ENTREGABLE_URL).json().get("datos", [])
+        producto_view = requests.get(API_PRODUCTO_VIEW).json().get("datos", [])
     except Exception as e:
-        asociaciones, productos, entregables = [], [], []
+        asociaciones, productos, entregables, producto_view= [], [], [], []
         print("Error al conectar con la API:", e)
 
     return render_template(
         "producto_entregable.html",
+        producto_view=producto_view,
         asociaciones=asociaciones,
         asociacion=None,
         productos=productos,
@@ -58,8 +61,10 @@ def buscar_producto_entregable():
                 asociaciones = requests.get(API_PRODUCTO_ENTREGABLE_URL).json().get("datos", [])
                 productos = requests.get(API_PRODUCTO_URL).json().get("datos", [])
                 entregables = requests.get(API_ENTREGABLE_URL).json().get("datos", [])
+                producto_view = requests.get(API_PRODUCTO_VIEW).json().get("datos", [])
                 return render_template(
                     "producto_entregable.html",
+                    producto_view=producto_view,
                     asociaciones=asociaciones,
                     asociacion=asociacion,
                     productos=productos,
@@ -94,13 +99,13 @@ def crear_producto_entregable():
 def actualizar_producto_entregable():
     codigo = request.form.get("id_producto")
     datos = {
-        "id_producto": codigo,
+        "id_producto": request.form.get("id_producto"),
         "id_entregable": request.form.get("id_entregable"),
         "fecha_asociacion": request.form.get("fecha_asociacion")
     }
 
     try:
-        requests.put(f"{API_PRODUCTO_ENTREGABLE_URL}/id/{codigo}", json=datos)
+        requests.put(f"{API_PRODUCTO_ENTREGABLE_URL}/id_producto/{codigo}", json=datos)
     except Exception as e:
         print("Error al actualizar asociación:", e)
 
@@ -111,7 +116,7 @@ def actualizar_producto_entregable():
 @rutas_producto_entregable.route("/producto_entregable/eliminar/<string:codigo>", methods=["POST"])
 def eliminar_producto_entregable(codigo):
     try:
-        requests.delete(f"{API_PRODUCTO_ENTREGABLE_URL}/id/{codigo}")
+        requests.delete(f"{API_PRODUCTO_ENTREGABLE_URL}/id_producto/{codigo}")
     except Exception as e:
         print("Error al eliminar asociación:", e)
 

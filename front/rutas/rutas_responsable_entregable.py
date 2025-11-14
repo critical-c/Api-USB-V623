@@ -7,6 +7,7 @@ rutas_responsable_entregable = Blueprint("rutas_responsable_entregable", __name_
 API_RE = "http://localhost:5031/api/responsable_entregable"
 API_RESPONSABLE = "http://localhost:5031/api/responsable"
 API_ENTREGABLE = "http://localhost:5031/api/entregable"
+API_RE_view = "http://localhost:5031/api/view_responsable_entregable"
 
 
 def formatear_fecha(fecha_str):
@@ -27,12 +28,14 @@ def responsable_entregable():
         asociaciones = requests.get(API_RE).json().get("datos", [])
         responsables = requests.get(API_RESPONSABLE).json().get("datos", [])
         entregables = requests.get(API_ENTREGABLE).json().get("datos", [])
+        re_view = requests.get(API_RE_view).json().get("datos", [])
     except Exception as e:
         print("Error al conectar con la API:", e)
-        asociaciones, responsables, entregables = [], [], []
+        asociaciones, responsables, entregables,  re_view= [], [], [] , []
 
     return render_template(
         "responsable_entregable.html",
+        re_view=re_view,
         asociaciones=asociaciones,
         responsables=responsables,
         entregables=entregables,
@@ -51,13 +54,15 @@ def buscar_responsable_entregable():
         asociaciones = requests.get(API_RE).json().get("datos", [])
         responsables = requests.get(API_RESPONSABLE).json().get("datos", [])
         entregables = requests.get(API_ENTREGABLE).json().get("datos", [])
+        re_view = requests.get(API_RE_view).json().get("datos", [])
     except Exception as e:
         print("Error al conectar con la API:", e)
-        asociaciones, responsables, entregables = [], [], []
+        asociaciones, responsables, entregables, re_view = [], [], [], []
 
     if not id_responsable:
         return render_template(
             "responsable_entregable.html",
+            re_view=re_view,
             asociaciones=asociaciones,
             responsables=responsables,
             entregables=entregables,
@@ -73,6 +78,7 @@ def buscar_responsable_entregable():
         asociacion["fecha_asociacion"] = formatear_fecha(asociacion.get("fecha_asociacion"))
         return render_template(
             "responsable_entregable.html",
+            re_view=re_view,
             asociaciones=asociaciones,
             responsables=responsables,
             entregables=entregables,
@@ -82,6 +88,7 @@ def buscar_responsable_entregable():
     else:
         return render_template(
             "responsable_entregable.html",
+            re_view=re_view,
             asociaciones=asociaciones,
             responsables=responsables,
             entregables=entregables,
@@ -110,28 +117,28 @@ def crear_responsable_entregable():
 # ------------------- ACTUALIZAR -------------------
 @rutas_responsable_entregable.route("/responsable_entregable/actualizar", methods=["POST"])
 def actualizar_responsable_entregable():
-    id_responsable = request.form.get("id_responsable")
-    id_entregable = request.form.get("id_entregable")
+    codigo = request.form.get("id_responsable")
 
     datos = {
-        "id_responsable": id_responsable,
-        "id_entregable": id_entregable,
+        "id_responsable": request.form.get("id_responsable"),
+        "id_entregable": request.form.get("id_entregable"),
         "fecha_asociacion": request.form.get("fecha_asociacion")
     }
 
     try:
-        requests.put(f"{API_RE}/id/{id_responsable}/{id_entregable}", json=datos)
+        requests.put(f"{API_RE}/id_responsable/{codigo}", json=datos)
     except Exception as e:
-        print("Error al actualizar asociación:", e)
+        return f"Error al actualizar la meta estratégica: {e}"
 
     return redirect(url_for("rutas_responsable_entregable.responsable_entregable"))
 
 
+
 # ------------------- ELIMINAR -------------------
-@rutas_responsable_entregable.route("/responsable_entregable/eliminar/<int:id_responsable>/<int:id_entregable>", methods=["POST"])
-def eliminar_responsable_entregable(id_responsable, id_entregable):
+@rutas_responsable_entregable.route("/responsable_entregable/eliminar/<int:id_responsable>", methods=["POST"])
+def eliminar_responsable_entregable(id_responsable):
     try:
-        requests.delete(f"{API_RE}/id/{id_responsable}/{id_entregable}")
+        requests.delete(f"{API_RE}/id_responsable/{id_responsable}")
     except Exception as e:
         print("Error al eliminar asociación:", e)
 

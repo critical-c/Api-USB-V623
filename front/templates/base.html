@@ -10,6 +10,10 @@
     <header>
         <nav>
             <ul class="dropdown-menu">
+                {% if session.usuario %}
+                <li><a href="{{ url_for('rutas_login.logout') }}">Cerrar sesión</a></li>
+                {% endif %}
+
                 <li><a href="{{ url_for('inicio') }}">Inicio</a></li>
                 <li><a href="{{ url_for('acerca') }}">Acerca</a></li>
 
@@ -26,6 +30,7 @@
                     <ul class="dropdown-content">
                         <li><a href="{{ url_for('rutas_responsable.responsable') }}">Responsables</a></li>
                         <li><a href="{{ url_for('rutas_tipo_responsable.tipo_responsable') }}">Tipos de Responsable</a></li>
+                        <li><a href="{{ url_for('rutas_responsable_entregable.responsable_entregable') }}">Asociaciones Responsable-Entregable</a></li>
                     </ul>
                 </li>
 
@@ -35,7 +40,7 @@
                         <li><a href="{{ url_for('rutas_producto.producto') }}">Productos</a></li>
                         <li><a href="{{ url_for('rutas_tipo_producto.tipo_producto') }}">Tipos de Producto</a></li>
                         <li><a href="{{ url_for('rutas_producto_entregable.producto_entregable') }}">Asociaciones Producto-Entregable</a></li>
-                        <li><a href="{{ url_for('rutas_responsable_entregable.responsable_entregable') }}">Asociaciones Responsable-Entregable</a></li>
+                        
                     </ul>
                 </li>
 
@@ -50,7 +55,7 @@
                         <li><a href="{{ url_for('rutas_presupuesto.presupuesto') }}">Presupuestos</a></li>
                     </ul>
                 </li>
-
+                
                 <li><a href="{{ url_for('rutas_entregable.entregable') }}">Entregables</a></li>
                 <li><a href="{{ url_for('rutas_variable_estrategica.variable_estrategica') }}">Variables Estratégicas</a></li>
 

@@ -69,19 +69,35 @@
       <thead>
         <tr>
           <th>ID Meta Estratégica</th>
+          <th>Título de la meta</th>
+          <th>Descripción de la meta</th>
+          <th>ID Objetivo Estratégico</th>
+          <th>Título del objetivo</th>
+          <th>ID Variable Estratégica</th>
+          <th>Título de la variable</th>
           <th>ID Proyecto</th>
-          <th>Fecha de Asociación</th>
+          <th>Código del proyecto</th>
+          <th>Título del proyecto</th>
+          <th>Fecha de asociación</th>
           <th>Acción</th>
         </tr>
       </thead>
       <tbody>
-        {% for mp in metas_proyecto %}
+        {% for mpv in meta_proyecto_view %}
         <tr>
-          <td>{{ mp.id_meta }}</td>
-          <td>{{ mp.id_proyecto }}</td>
-          <td>{{ mp.fecha_asociacion }}</td>
+          <td>{{ mpv.id_meta }}</td>
+          <td>{{ mpv.titulo_meta }}</td>
+          <td>{{ mpv.descripcion_meta }}</td>
+          <td>{{ mpv.id_objetivo }}</td>
+          <td>{{ mpv.titulo_objetivo }}</td>
+          <td>{{ mpv.id_variable }}</td>
+          <td>{{ mpv.titulo_variable }}</td>
+          <td>{{ mpv.id_proyecto }}</td>
+          <td>{{ mpv.codigo_proyecto }}</td>
+          <td>{{ mpv.titulo_proyecto }}</td>
+          <td>{{ mpv.fecha_asociacion }}</td>
           <td>
-            <form method="post" action="{{ url_for('rutas_meta_proyecto.eliminar_meta_proyecto', codigo=mp.id_meta) }}">
+            <form method="post" action="{{ url_for('rutas_meta_proyecto.eliminar_meta_proyecto', codigo=mpv.id_meta) }}">
               <button type="submit" class="btn-eliminar">🗑️</button>
             </form>
           </td>

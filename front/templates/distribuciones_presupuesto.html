@@ -71,22 +71,29 @@
     <table>
       <thead>
         <tr>
-          <th>ID</th>
+          <th>ID Distribucion</th>
           <th>ID Presupuesto Padre</th>
+          <th>ID Proyecto Asociado</th>
           <th>ID Proyecto Hijo</th>
+          <th>Proyecto Hijo</th>
+          <th>Periodo Año</th>
+          <th>Monto Aprobado</th>
           <th>Monto Asignado</th>
-          <th>Acción</th>
         </tr>
       </thead>
       <tbody>
-        {% for d in distribuciones_presupuesto %}
+        {% for d in distribucion %}
         <tr>
-          <td>{{ d.id }}</td>
-          <td>{{ d.presupuesto_padre_id }}</td>
-          <td>{{ d.proyecto_hijo_id }}</td>
+          <td>{{ d.id_distribucion }}</td>
+          <td>{{ d.id_presupuesto_padre }}</td>
+          <td>{{ d.id_proyecto_asociado }}</td>
+          <td>{{ d.id_proyecto_hijo }}</td>
+          <td>{{ d.proyecto_hijo }}</td>
+          <td>{{ d.periodo_anio }}</td>
+          <td>{{ d.monto_aprobado }}</td>
           <td>{{ d.monto_asignado }}</td>
           <td>
-            <form method="post" action="{{ url_for('rutas_distribucion_presupuesto.eliminar_distribucion_presupuesto', codigo=d.id) }}">
+            <form method="post" action="{{ url_for('rutas_distribucion_presupuesto.eliminar_distribucion_presupuesto', codigo=d.id_distribucion) }}">
               <button type="submit" class="btn-eliminar">🗑️</button>
             </form>
           </td>

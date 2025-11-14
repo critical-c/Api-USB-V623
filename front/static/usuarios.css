@@ -170,3 +170,25 @@ input {
   border: 1px solid #ccc;
   border-radius: 8px;
 }
+
+/* ===== Columna de hash truncada ===== */
+.hash-col {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Estilo simple para <details> */
+.hash-col details {
+  cursor: pointer;
+  user-select: none;
+}
+
+.hash-col summary {
+  list-style: none;
+}
+
+.hash-col summary::-webkit-details-marker {
+  display: none;
+}

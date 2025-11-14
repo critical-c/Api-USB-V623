@@ -8,6 +8,7 @@ rutas_distribucion_presupuesto = Blueprint("rutas_distribucion_presupuesto", __n
 API_URL = "http://localhost:5031/api/distribucion_presupuesto"
 API_PRESUPUESTO = "http://localhost:5031/api/presupuesto"
 API_PROYECTO = "http://localhost:5031/api/proyecto"
+API_DISTRIBUCION = "http://localhost:5031/api/view_distribucion_presupuesto"
 
 # ------------------- LISTAR distribucion_presupuesto -------------------
 @rutas_distribucion_presupuesto.route("/distribucion_presupuesto")
@@ -16,12 +17,14 @@ def distribucion_presupuesto():
         distribuciones_presupuesto = requests.get(API_URL).json().get("datos", [])
         presupuesto = requests.get(API_PRESUPUESTO).json().get("datos", [])
         proyectos = requests.get(API_PROYECTO).json().get("datos", [])
+        distribucion = requests.get(API_DISTRIBUCION).json().get("datos", [])
     except Exception as e:
-        distribuciones_presupuesto, presupuesto = [], []
+        distribuciones_presupuesto, presupuesto, distribucion = [], [], []
         print("Error al conectar con la API:", e)
 
     return render_template(
         "distribuciones_presupuesto.html",
+        distribucion=distribucion,
         distribuciones_presupuesto=distribuciones_presupuesto,
         distribucion_presupuesto=None,
         proyectos=proyectos,
@@ -44,9 +47,11 @@ def buscar_distribucion_presupuesto():
                     distribuciones_presupuesto = requests.get(API_URL).json().get("datos", [])
                     presupuesto = requests.get(API_PRESUPUESTO).json().get("datos", [])
                     proyectos = requests.get(API_PROYECTO).json().get("datos", [])
+                    distribucion = requests.get(API_DISTRIBUCION).json().get("datos", [])
                     return render_template(
                         "distribuciones_presupuesto.html",
                         distribuciones_presupuesto=distribuciones_presupuesto,
+                        distribucion=distribucion,
                         distribucion_presupuesto=distribucion_presupuesto,
                         proyectos=proyectos,
                         presupuesto=presupuesto,

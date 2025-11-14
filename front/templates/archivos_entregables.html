@@ -63,17 +63,33 @@
       <thead>
         <tr>
           <th>ID Archivo</th>
+          <th>Nombre del archivo</th>
+          <th>Tipo de archivo</th>
+          <th>Fecha del archivo</th>
+          <th>Ruta del archivo</th>
           <th>ID Entregable</th>
+          <th>Código del entregable</th>
+          <th>Título del entregable</th>
+          <th>Fecha de inicio</th>
+          <th>Fecha fin prevista</th>
           <th>Acción</th>
         </tr>
       </thead>
       <tbody>
-        {% for ae in archivos_entregables %}
+        {% for av in archivos_vista %}
         <tr>
-          <td>{{ ae.id_archivo }}</td>
-          <td>{{ ae.id_entregable }}</td>
+          <td>{{ av.id_archivo }}</td>
+          <td>{{ av.nombre_archivo }}</td>
+          <td>{{ av.tipo_archivo }}</td>
+          <td>{{ av.fecha_archivo }}</td>
+          <td>{{ av.ruta_archivo }}</td>
+          <td>{{ av.id_entregable }}</td>
+          <td>{{ av.codigo_entregable }}</td>
+          <td>{{ av.titulo_entregable }}</td>
+          <td>{{ av.fecha_inicio }}</td>
+          <td>{{ av.fecha_fin_prevista }}</td>
           <td>
-            <form method="post" action="{{ url_for('rutas_archivo_entregable.eliminar_archivo_entregable', codigo=ae.id_archivo) }}">
+            <form method="post" action="{{ url_for('rutas_archivo_entregable.eliminar_archivo_entregable', codigo=av.id_archivo) }}">
               <button type="submit" class="btn-eliminar">🗑️</button>
             </form>
           </td>

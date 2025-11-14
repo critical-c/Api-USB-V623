@@ -9,6 +9,7 @@ rutas_meta_proyecto = Blueprint("rutas_meta_proyecto", __name__)
 API_URL = "http://localhost:5031/api/meta_proyecto"
 API_META_ESTRATEGICA = "http://localhost:5031/api/meta_estrategica"
 API_PROYECTO = "http://localhost:5031/api/proyecto"
+API_METAPROYECTO_VIEW = "http://localhost:5031/api/view_meta_proyecto"
 
 def formatear_fecha(fecha_str):
     """
@@ -31,12 +32,14 @@ def meta_proyecto():
         metas_proyecto = requests.get(API_URL).json().get("datos", [])
         metas_estrategica = requests.get(API_META_ESTRATEGICA).json().get("datos", [])
         proyectos = requests.get(API_PROYECTO).json().get("datos", [])
+        meta_proyecto_view = requests.get(API_METAPROYECTO_VIEW).json().get("datos", [])
     except Exception as e:
-        metas_proyecto, metas_estrategica, proyectos= [], [], []
+        metas_proyecto, metas_estrategica, proyectos, meta_proyecto_view= [], [], [], []
         print("Error al conectar con la API:", e)
 
     return render_template(
         "meta_proyecto.html",
+        meta_proyecto_view=meta_proyecto_view,
         metas_proyecto=metas_proyecto,
         meta_proyecto=None,
         metas_estrategica= metas_estrategica,
@@ -60,8 +63,10 @@ def buscar_meta_proyecto():
                     metas_proyecto = requests.get(API_URL).json().get("datos", [])
                     metas_estrategica = requests.get(API_META_ESTRATEGICA).json().get("datos", [])
                     proyectos = requests.get(API_PROYECTO).json().get("datos", [])
+                    meta_proyecto_view = requests.get(API_METAPROYECTO_VIEW).json().get("datos", [])
                     return render_template(
                         "meta_proyecto.html",
+                        meta_proyecto_view=meta_proyecto_view,
                         metas_proyecto=metas_proyecto,
                         meta_proyecto=meta_proyecto,
                         metas_estrategica=metas_estrategica,
