@@ -1,26 +1,22 @@
-# Importar módulos necesarios de Flask y la librería requests para conectarse a la API externa
+# =================== rutas/rutas_usuarios.py ===================
 from flask import Blueprint, render_template, request, redirect, url_for
 import requests
+# Importar la función para encriptar contraseñas
+from werkzeug.security import generate_password_hash  
 
-# Crear el Blueprint de productos
-# "rutas_productos" es el nombre del módulo
-# __name__ permite ubicar las plantillas dentro del proyecto
 rutas_usuario = Blueprint("rutas_usuario", __name__)
-
-# URL base de la API en C# que gestiona los productos
 API_URL = "http://localhost:5031/api/usuario"
 
-# ------------------- LISTAR usuario -------------------
+
+# ------------------- LISTAR USUARIO -------------------
 @rutas_usuario.route("/usuario")
 def usuario():
-
     try:
         respuesta = requests.get(API_URL)
         usuarios = respuesta.json().get("datos", [])
     except Exception as e:
         usuarios = []
         print("Error al conectar con la API:", e)
-
 
     return render_template(
         "usuarios.html",
@@ -29,10 +25,10 @@ def usuario():
         modo="crear"
     )
 
-# ------------------- BUSCAR usuario -------------------
+
+# ------------------- BUSCAR USUARIO -------------------
 @rutas_usuario.route("/usuario/buscar", methods=["POST"])
 def buscar_usuario():
-
     codigo = request.form.get("codigo_buscar")
 
     if codigo:
@@ -41,7 +37,6 @@ def buscar_usuario():
             if respuesta.status_code == 200:
                 datos = respuesta.json().get("datos", [])
                 if datos:
-                    # Si la API retorna datos, se asume que es una lista
                     usuario = datos[0]
                     usuarios = requests.get(API_URL).json().get("datos", [])
                     return render_template(
@@ -53,7 +48,6 @@ def buscar_usuario():
         except Exception as e:
             return f"Error en la búsqueda: {e}"
 
-    # Si no se encuentra, recargar la lista completa
     usuarios = requests.get(API_URL).json().get("datos", [])
     return render_template(
         "usuarios.html",
@@ -63,12 +57,17 @@ def buscar_usuario():
         modo="crear"
     )
 
-# ------------------- CREAR usuario -------------------
+
+# ------------------- CREAR USUARIO -------------------
 @rutas_usuario.route("/usuario/crear", methods=["POST"])
 def crear_usuario():
+    contrasena_plana = request.form.get("contrasena")
+    #Almacenamos la contraseña encriptada
+    contrasena_hash = generate_password_hash(contrasena_plana)  
+
     datos = {
         "email": request.form.get("email"),
-        "contrasena": request.form.get("contrasena"),
+        "contrasena": contrasena_hash, #Contraseña encriptada
         "ruta_avatar": request.form.get("ruta_avatar") or None,
         "activo": request.form.get("activo")
     }
@@ -80,14 +79,17 @@ def crear_usuario():
 
     return redirect(url_for("rutas_usuario.usuario"))
 
-# ------------------- ACTUALIZAR usuario -------------------
+
+# ------------------- ACTUALIZAR USUARIO -------------------
 @rutas_usuario.route("/usuario/actualizar", methods=["POST"])
 def actualizar_usuario():
-
     codigo = request.form.get("id")
+    contrasena_plana = request.form.get("contrasena")
+    contrasena_hash = generate_password_hash(contrasena_plana)  # 🔒 re-encriptar
+
     datos = {
         "email": request.form.get("email"),
-        "contrasena": request.form.get("contrasena"),
+        "contrasena": contrasena_hash,
         "ruta_avatar": request.form.get("ruta_avatar") or None,
         "activo": request.form.get("activo")
     }
@@ -99,18 +101,13 @@ def actualizar_usuario():
 
     return redirect(url_for("rutas_usuario.usuario"))
 
-# ------------------- ELIMINAR usuario -------------------
+
+# ------------------- ELIMINAR USUARIO -------------------
 @rutas_usuario.route("/usuario/eliminar/<string:codigo>", methods=["POST"])
 def eliminar_usuario(codigo):
-    """
-    Ruta para eliminar un producto de la API según su código.
-    Envía una petición DELETE al endpoint correspondiente.
-    """
     try:
         requests.delete(f"{API_URL}/id/{codigo}")
     except Exception as e:
         return f"Error al eliminar usuario: {e}"
 
     return redirect(url_for("rutas_usuario.usuario"))
-
-
