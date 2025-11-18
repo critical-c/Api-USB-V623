@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 import requests
+from datetime import datetime
 
 rutas_proyecto = Blueprint("rutas_proyecto", __name__)
 
@@ -7,6 +8,21 @@ rutas_proyecto = Blueprint("rutas_proyecto", __name__)
 API_PROYECTO_URL = "http://localhost:5031/api/proyecto"
 API_TIPO_PROYECTO_URL = "http://localhost:5031/api/tipo_proyecto"
 API_USUARIO_URL = "http://localhost:5031/api/usuario"
+
+def formatear_fecha(fecha_str):
+    """
+    Convierte una fecha a formato YYYY-MM-DD compatible con <input type="date">.
+    Acepta fechas como '2025-10-08', '08-10-2025' o '2025-10-08T00:00:00'.
+    """
+    if not fecha_str:
+        return ""
+    for fmt in ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%d-%m-%Y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(fecha_str, fmt).strftime("%Y-%m-%d")
+        except ValueError:
+            pass
+    return ""
+
 
 # ------------------- LISTAR PROYECTOS -------------------
 @rutas_proyecto.route("/proyecto")
@@ -48,6 +64,10 @@ def buscar_proyecto():
                 datos = respuesta.json().get("datos", [])
                 if datos:
                     proyecto = datos[0]
+                    proyecto["fecha_inicio"] = formatear_fecha(datos[0].get("fecha_inicio"))
+                    proyecto["fecha_fin_prevista"] = formatear_fecha(datos[0].get("fecha_fin_prevista"))
+                    proyecto["fecha_modificacion"] = formatear_fecha(datos[0].get("fecha_modificacion"))
+                    proyecto["fecha_finalizacion"] = formatear_fecha(datos[0].get("fecha_finalizacion"))
                     proyectos = requests.get(API_PROYECTO_URL).json().get("datos", [])
                     tipos = requests.get(API_TIPO_PROYECTO_URL).json().get("datos", [])
                     usuarios = requests.get(API_USUARIO_URL).json().get("datos", [])
@@ -83,9 +103,9 @@ def crear_proyecto():
         "descripcion": request.form.get("descripcion"),
         "fecha_inicio": request.form.get("fecha_inicio"),
         "fecha_fin_prevista": request.form.get("fecha_fin_prevista"),
-        "fecha_modificacion": request.form.get("fecha_modificacion"),
-        "fecha_finalizacion": request.form.get("fecha_finalizacion"),
-        "ruta_logo": request.form.get("ruta_logo")
+        "fecha_modificacion": request.form.get("fecha_modificacion") or None,
+        "fecha_finalizacion": request.form.get("fecha_finalizacion") or None,
+        "ruta_logo": request.form.get("ruta_logo") or None
     }
 
     try:
@@ -102,7 +122,7 @@ def actualizar_proyecto():
 
     datos = {
         "id": codigo,
-        "id_proyecto_padre": request.form.get("id_proyecto_padre"),
+        "id_proyecto_padre": request.form.get("id_proyecto_padre") or None,
         "id_responsable": request.form.get("id_responsable"),
         "id_tipo_proyecto": request.form.get("id_tipo_proyecto"),
         "codigo": request.form.get("codigo"),
@@ -110,9 +130,9 @@ def actualizar_proyecto():
         "descripcion": request.form.get("descripcion"),
         "fecha_inicio": request.form.get("fecha_inicio"),
         "fecha_fin_prevista": request.form.get("fecha_fin_prevista"),
-        "fecha_modificacion": request.form.get("fecha_modificacion"),
-        "fecha_finalizacion": request.form.get("fecha_finalizacion"),
-        "ruta_logo": request.form.get("ruta_logo")
+        "fecha_modificacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "fecha_finalizacion": request.form.get("fecha_finalizacion") or None,
+        "ruta_logo": request.form.get("ruta_logo") or None
     }
 
     try:

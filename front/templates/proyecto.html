@@ -34,7 +34,7 @@
           <option value="">Seleccione responsable</option>
           {% for u in usuarios %}
             <option value="{{ u.id }}" {% if proyecto and proyecto.id_responsable == u.id %}selected{% endif %}>
-              {{ u.nombre }}
+              {{ u.email }}
             </option>
           {% endfor %}
         </select>
@@ -79,7 +79,7 @@
 
       <div class="campo">
         <label>Fecha de Modificación</label>
-        <input type="date" name="fecha_modificacion" value="{{ proyecto.fecha_modificacion if proyecto else '' }}">
+        <input type="date" name="fecha_modificacion" value="{{ proyecto.fecha_modificacion if proyecto else '' }}" readonly>
       </div>
 
       <div class="campo">
@@ -113,11 +113,17 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Código</th>
-          <th>Título</th>
-          <th>Responsable</th>
-          <th>Tipo</th>
-          <th>Inicio</th>
+          <th>ID Proyecto padre</th>
+          <th>ID tipo responsable</th>
+          <th>ID Tipo Proyecto</th>
+          <th>Codigo</th>
+          <th>Titulo</th>
+          <th>>Descripcion</th>
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin Prevista</th>
+          <th>Fecha Modificacion</th>
+          <th>Fecha Finalizacion</th>
+          <th>Ruta Logo</th>
           <th>Acción</th>
         </tr>
       </thead>
@@ -125,11 +131,17 @@
         {% for p in proyectos %}
         <tr>
           <td>{{ p.id }}</td>
-          <td>{{ p.codigo }}</td>
-          <td>{{ p.titulo }}</td>
+          <td>{{ p.id_proyecto_padre }}</td>
           <td>{{ p.id_responsable }}</td>
           <td>{{ p.id_tipo_proyecto }}</td>
+          <td>{{ p.codigo }}</td>
+          <td>{{ p.titulo }}</td>
+          <td>{{ p.descripcion }}</td>
           <td>{{ p.fecha_inicio }}</td>
+          <td>{{ p.fecha_fin_prevista }}</td>
+          <td>{{ p.fecha_modificacion }}</td>
+          <td>{{ p.fecha_finalizacion }}</td>
+          <td>{{ p.ruta_logo }}</td>
           <td>
             <form method="post" action="{{ url_for('rutas_proyecto.eliminar_proyecto', id=p.id) }}">
               <button type="submit" class="btn-eliminar">🗑️</button>
