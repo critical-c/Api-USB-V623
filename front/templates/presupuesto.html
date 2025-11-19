@@ -25,7 +25,7 @@
           <option value="">Seleccione un proyecto</option>
           {% for p in proyectos %}
             <option value="{{ p.id }}" {% if presupuesto and presupuesto.id_proyecto == p.id %}selected{% endif %}>
-              {{ p.nombre }}
+              {{ p.titulo }}
             </option>
           {% endfor %}
         </select>
@@ -37,7 +37,7 @@
         <select name="estado" required>
           <option value="">Seleccione un estado</option>
           {% for e in estados %}
-            <option value="{{ e.id }}" {% if presupuesto and presupuesto.estado == e.id %}selected{% endif %}>
+            <option value="{{ e.nombre }}" {% if presupuesto and presupuesto.estado == e.nombre %}selected{% endif %}>
               {{ e.nombre }}
             </option>
           {% endfor %}
@@ -104,10 +104,13 @@
         <tr>
           <th>ID</th>
           <th>Proyecto</th>
-          <th>Estado</th>
           <th>Monto Solicitado</th>
+          <th>Estado</th>
           <th>Monto Aprobado</th>
           <th>Periodo</th>
+          <th>Fecha Solicitud</th>
+          <th>Fecha Aprovacion</th>
+          <th>Observaciones</th>
           <th>Acción</th>
         </tr>
       </thead>
@@ -116,10 +119,13 @@
         <tr>
           <td>{{ p.id }}</td>
           <td>{{ p.id_proyecto }}</td>
-          <td>{{ p.estado }}</td>
           <td>{{ p.monto_solicitado }}</td>
+          <td>{{ p.estado }}</td>
           <td>{{ p.monto_aprobado }}</td>
           <td>{{ p.periodo_anio }}</td>
+          <td>{{ p.fecha_solicitud }}</td>
+          <td>{{ p.fecha_aprobacion }}</td>
+          <td>{{ p.observaciones }}</td>
           <td>
             <form method="post" action="{{ url_for('rutas_presupuesto.eliminar_presupuesto', codigo=p.id) }}">
               <button type="submit" class="btn-eliminar">🗑️</button>

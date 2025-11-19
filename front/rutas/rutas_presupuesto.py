@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 import requests
+from datetime import datetime
 
 # Crear el Blueprint de presupuesto
 rutas_presupuesto = Blueprint("rutas_presupuesto", __name__)
@@ -8,6 +9,21 @@ rutas_presupuesto = Blueprint("rutas_presupuesto", __name__)
 API_PRESUPUESTO_URL = "http://localhost:5031/api/presupuesto"
 API_PROYECTO_URL = "http://localhost:5031/api/proyecto"
 API_ESTADO_URL = "http://localhost:5031/api/estado"
+
+
+def formatear_fecha(fecha_str):
+    """
+    Convierte una fecha a formato YYYY-MM-DD compatible con <input type="date">.
+    Acepta fechas como '2025-10-08', '08-10-2025' o '2025-10-08T00:00:00'.
+    """
+    if not fecha_str:
+        return ""
+    for fmt in ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%d-%m-%Y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(fecha_str, fmt).strftime("%Y-%m-%d")
+        except ValueError:
+            pass
+    return ""
 
 # ------------------- LISTAR presupuestos -------------------
 @rutas_presupuesto.route("/presupuesto")
@@ -57,6 +73,8 @@ def buscar_presupuesto():
                     presupuestos = requests.get(API_PRESUPUESTO_URL).json().get("datos", [])
                     proyectos = requests.get(API_PROYECTO_URL).json().get("datos", [])
                     estados = requests.get(API_ESTADO_URL).json().get("datos", [])
+                    presupuesto["fecha_solicitud"] = formatear_fecha(datos[0].get("fecha_solicitud"))
+                    presupuesto["fecha_aprobacion"] = formatear_fecha(datos[0].get("fecha_aprobacion"))
                     return render_template(
                         "presupuesto.html",
                         presupuestos=presupuestos,
@@ -89,11 +107,11 @@ def crear_presupuesto():
         "id_proyecto": request.form.get("id_proyecto"),
         "estado": request.form.get("estado"),
         "monto_solicitado": request.form.get("monto_solicitado"),
-        "monto_aprobado": request.form.get("monto_aprobado"),
+        "monto_aprobado": request.form.get("monto_aprobado") or None,
         "periodo_anio": request.form.get("periodo_anio"),
         "fecha_solicitud": request.form.get("fecha_solicitud"),
-        "fecha_aprobacion": request.form.get("fecha_aprobacion"),
-        "observaciones": request.form.get("observaciones")
+        "fecha_aprobacion": request.form.get("fecha_aprobacion") or None,
+        "observaciones": request.form.get("observaciones") or None
     }
 
     try:
@@ -112,11 +130,11 @@ def actualizar_presupuesto():
         "id_proyecto": request.form.get("id_proyecto"),
         "estado": request.form.get("estado"),
         "monto_solicitado": request.form.get("monto_solicitado"),
-        "monto_aprobado": request.form.get("monto_aprobado"),
+        "monto_aprobado": request.form.get("monto_aprobado") or None,
         "periodo_anio": request.form.get("periodo_anio"),
         "fecha_solicitud": request.form.get("fecha_solicitud"),
-        "fecha_aprobacion": request.form.get("fecha_aprobacion"),
-        "observaciones": request.form.get("observaciones")
+        "fecha_aprobacion": request.form.get("fecha_aprobacion") or None,
+        "observaciones": request.form.get("observaciones") or None
     }
 
     try:
